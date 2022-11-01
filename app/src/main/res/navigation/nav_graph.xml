@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/notaFragment">
+
+    <fragment
+        android:id="@+id/notaFragment"
+        android:name="com.example.misnotas.fragments.NotaFragment"
+        android:label="fragment_nota"
+        tools:layout="@layout/fragment_nota" >
+        <action
+            android:id="@+id/action_notaFragment_to_saveOrDeleteFragment"
+            app:destination="@id/saveOrDeleteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/saveOrDeleteFragment"
+        android:name="com.example.misnotas.fragments.SaveOrDeleteFragment"
+        android:label="fragment_save_or_delete"
+        tools:layout="@layout/fragment_save_or_delete" >
+        <action
+            android:id="@+id/action_saveOrDeleteFragment_to_notaFragment"
+            app:destination="@id/notaFragment" />
+    </fragment>
+</navigation>
