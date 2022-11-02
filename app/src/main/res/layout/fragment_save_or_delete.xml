@@ -45,18 +45,19 @@
         </com.google.android.material.textview.MaterialTextView>
 
         <ImageView
+            android:id="@+id/saveNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/saveNote"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:focusable="true"
-            android:clickable="true"
-            android:paddingBottom="5dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_baseline_save_24"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            app:tint="@color/black">
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_baseline_save_24"
+            app:tint="@color/black"
+            tools:ignore="SpeakableTextPresentCheck">
         </ImageView>
     </RelativeLayout>
 
@@ -82,7 +83,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="10dp"
-                    android:id="@+id/editTitle"
+                    android:id="@+id/etTitle"
                     android:inputType="none"
                     android:textSize="22sp"
                     android:importantForAutofill="no"

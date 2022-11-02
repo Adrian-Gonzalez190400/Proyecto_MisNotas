@@ -4,7 +4,6 @@ buildscript {
         google()
     }
     dependencies {
-
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2")
     }
 }
@@ -15,8 +14,4 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 
 }
-
-
-
-
 
