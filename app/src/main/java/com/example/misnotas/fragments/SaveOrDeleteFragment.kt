@@ -191,7 +191,8 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
     private fun saveNote() {
         if(contentBinding.etNoteContent.text.toString().isEmpty() ||
-            contentBinding.etTitle.text.toString().isEmpty()){
+            contentBinding.etTitle.text.toString().isEmpty() ||
+            (contentBinding.swTask.isChecked && expirationDate=="Expiration date")){
             Toast.makeText(activity, "Something is Empty", Toast.LENGTH_SHORT).show()
         }else{
             note=args.note
