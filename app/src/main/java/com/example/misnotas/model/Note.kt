@@ -10,7 +10,7 @@ data class Note(
     var id: Int=0,
     val title: String,
     val content: String,
-    val type: Int,//0 nota simple, 1 tarea
+    val isTask: Boolean,
     val creationDate: String,
     val expirationDate: String?,
     val color: Int = -1

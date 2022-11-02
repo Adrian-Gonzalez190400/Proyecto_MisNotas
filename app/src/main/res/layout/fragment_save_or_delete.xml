@@ -98,6 +98,16 @@
                         android:fontFamily="@font/google_sans_medium"
                         android:hint="Note Title"></EditText>
 
+                    <Switch
+                        android:id="@+id/swTask"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="22dp"
+                        android:fontFamily="@font/google_sans_regular"
+                        android:textSize="16sp"
+                        android:text="Task    ">
+                    </Switch>
+
                     <com.yahiaangelo.markdownedittext.MarkdownEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

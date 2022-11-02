@@ -135,6 +135,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         val note=args.note
         val title=contentBinding.etTitle
         val content=contentBinding.etNoteContent
+        val task=contentBinding.swTask
         val lastEdited=contentBinding.lastEdited
 
         if(note==null){
@@ -144,6 +145,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         if(note!=null){
             title.setText(note.title)
             content.renderMD(note.content)
+            task.isChecked=note.isTask
             lastEdited.text=getString(R.string.edited_on,note.creationDate)
             color=note.color
             contentBinding.apply {
@@ -172,7 +174,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             0,
                             contentBinding.etTitle.text.toString(),
                             contentBinding.etNoteContent.getMD(),
-                            0,
+                            contentBinding.swTask.isChecked,
                             currentDate,
                             currentDate,
                             color
@@ -203,7 +205,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      note!!.id,
                      contentBinding.etTitle.text.toString(),
                      contentBinding.etNoteContent.getMD(),
-                     0,
+                     contentBinding.swTask.isChecked,
                      currentDate,
                      currentDate,
                      color

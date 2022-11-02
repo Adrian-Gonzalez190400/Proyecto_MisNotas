@@ -35,7 +35,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         android:id="@+id/app_title"
                         android:fontFamily="@font/google_sans_bold"
-                        android:text="Mis Notas"
+                        android:text="My Notes"
                         android:textSize="30sp"
                         android:textColor="@color/black"
                         android:layout_marginTop="15sp"
