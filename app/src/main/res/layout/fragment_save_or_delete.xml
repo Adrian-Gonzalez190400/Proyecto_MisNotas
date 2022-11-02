@@ -45,19 +45,18 @@
         </com.google.android.material.textview.MaterialTextView>
 
         <ImageView
-            android:id="@+id/saveNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:id="@+id/saveNote"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
             android:focusable="true"
+            android:clickable="true"
             android:paddingBottom="5dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_baseline_save_24"
-            app:tint="@color/black"
-            tools:ignore="SpeakableTextPresentCheck">
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp"
+            app:tint="@color/black">
         </ImageView>
     </RelativeLayout>
 
@@ -89,23 +88,23 @@
                     android:importantForAutofill="no"
                     android:fontFamily="@font/google_sans_medium"
                     android:hint="Note Title">
-
-                    <com.yahiaangelo.markdownedittext.MarkdownEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginEnd="22dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@null"
-                        android:fontFamily="@font/google_sans_regular"
-                        android:hint="Note"
-                        android:importantForAutofill="no"
-                        android:inputType="none"
-                        android:padding="10dp"
-                        android:textSize="16sp"
-                        android:id="@+id/etNoteContent">
-                    </com.yahiaangelo.markdownedittext.MarkdownEditText>
                 </EditText>
+
+                <com.yahiaangelo.markdownedittext.MarkdownEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginEnd="22dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@null"
+                    android:fontFamily="@font/google_sans_regular"
+                    android:hint="Note"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:id="@+id/etNoteContent">
+                </com.yahiaangelo.markdownedittext.MarkdownEditText>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
