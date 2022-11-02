@@ -123,7 +123,7 @@
             android:orientation="horizontal"
             android:clipToPadding="false"
             android:background="@drawable/fab_btn_corner"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/darkPurple"
             android:layout_margin="16dp">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -132,7 +132,7 @@
                 android:layout_gravity="center_vertical"
                 android:id="@+id/inner_fab"
                 android:src="@drawable/ic_round_add_24"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/darkPurple"
                 app:elevation="0dp"
                 app:tint="@color/white"
                 android:contentDescription=" "

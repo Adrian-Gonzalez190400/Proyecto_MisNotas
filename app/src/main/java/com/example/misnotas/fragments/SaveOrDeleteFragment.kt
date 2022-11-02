@@ -1,5 +1,6 @@
 package com.example.misnotas.fragments
 
+import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -45,6 +46,9 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private val currentDate = SimpleDateFormat.getInstance().format(Date()) //Obtener fecha actual
     private val job= CoroutineScope(Dispatchers.Main)
     private val args: SaveOrDeleteFragmentArgs by navArgs()
+    private val expirationCalendar = Calendar.getInstance()
+    private var expirationDate = "Expiration date"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,8 +78,6 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             navController.popBackStack()
         }
 
-
-
         contentBinding.saveNote.setOnClickListener{
             saveNote()
         }
@@ -89,6 +91,30 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             }
         }catch (e: Throwable){
             Log.d("TAG", e.stackTraceToString())
+        }
+
+        contentBinding.swTask.setOnClickListener {
+            taskItemsVisibility()
+        }
+
+        val datePicker = DatePickerDialog.OnDateSetListener { view, year, month, day ->
+            expirationCalendar.set(Calendar.YEAR, year)
+            expirationCalendar.set(Calendar.MONTH, month)
+            expirationCalendar.set(Calendar.DAY_OF_MONTH, day)
+            expirationCalendar.set(Calendar.HOUR, 11)
+            expirationCalendar.set(Calendar.MINUTE, 59)
+            expirationCalendar.set(Calendar.SECOND, 0)
+            expirationCalendar.set(Calendar.AM_PM, 1)
+            expirationDate = SimpleDateFormat.getInstance().format(expirationCalendar.time)
+            contentBinding.tvExpirationDate.text = expirationDate
+        }
+
+        contentBinding.fabAddExpirationDate.setOnClickListener {
+            this.context?.let { it1 ->
+                DatePickerDialog(
+                    it1, datePicker, expirationCalendar.get(Calendar.YEAR),
+                    expirationCalendar.get(Calendar.MONTH), expirationCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            }
         }
 
         contentBinding.fabColorPick.setOnClickListener {
@@ -128,7 +154,6 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         }
         //opens with existing note item
         setUpNote()
-
     }
 
     private fun setUpNote() {
@@ -136,6 +161,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         val title=contentBinding.etTitle
         val content=contentBinding.etNoteContent
         val task=contentBinding.swTask
+        val expiration=contentBinding.tvExpirationDate
         val lastEdited=contentBinding.lastEdited
 
         if(note==null){
@@ -146,8 +172,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             title.setText(note.title)
             content.renderMD(note.content)
             task.isChecked=note.isTask
+            if(note.isTask) expiration.text=note.expirationDate
+            else expiration.text="Expiration date"
             lastEdited.text=getString(R.string.edited_on,note.creationDate)
             color=note.color
+            taskItemsVisibility()
             contentBinding.apply {
                 job.launch {
                     delay(10)
@@ -176,7 +205,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             contentBinding.etNoteContent.getMD(),
                             contentBinding.swTask.isChecked,
                             currentDate,
-                            currentDate,
+                            expirationDate,
                             color
                         )
                     )
@@ -207,12 +236,19 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      contentBinding.etNoteContent.getMD(),
                      contentBinding.swTask.isChecked,
                      currentDate,
-                     currentDate,
+                     expirationDate,
                      color
                  )
              )
         }
     }
 
+    private fun taskItemsVisibility(){
+        if(contentBinding.swTask.isChecked){
+            contentBinding.fabAddExpirationDate.visibility = View.VISIBLE
+        } else{
+            contentBinding.fabAddExpirationDate.visibility = View.GONE
+        }
+    }
 
 }
