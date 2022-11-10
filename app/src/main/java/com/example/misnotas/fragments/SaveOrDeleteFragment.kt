@@ -1,6 +1,7 @@
 package com.example.misnotas.fragments
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
 class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
@@ -48,7 +50,6 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private val args: SaveOrDeleteFragmentArgs by navArgs()
     private val expirationCalendar = Calendar.getInstance()
     private var expirationDate = "Expiration date"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
         ViewCompat.setTransitionName(
             contentBinding.noteContentFragmentParent,
-            "recyclerView_${args.note?.id}"
+            "recyclefiew_${args.note?.id}"
         )
 
         contentBinding.backBtn. setOnClickListener{
@@ -101,16 +102,22 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             expirationCalendar.set(Calendar.YEAR, year)
             expirationCalendar.set(Calendar.MONTH, month)
             expirationCalendar.set(Calendar.DAY_OF_MONTH, day)
-            expirationCalendar.set(Calendar.HOUR, 11)
-            expirationCalendar.set(Calendar.MINUTE, 59)
-            expirationCalendar.set(Calendar.SECOND, 0)
-            expirationCalendar.set(Calendar.AM_PM, 1)
+            expirationDate = SimpleDateFormat.getInstance().format(expirationCalendar.time)
+            contentBinding.tvExpirationDate.text = expirationDate
+        }
+
+        val timePicker = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+            expirationCalendar.set(Calendar.HOUR_OF_DAY, hour)
+            expirationCalendar.set(Calendar.MINUTE, minute)
             expirationDate = SimpleDateFormat.getInstance().format(expirationCalendar.time)
             contentBinding.tvExpirationDate.text = expirationDate
         }
 
         contentBinding.fabAddExpirationDate.setOnClickListener {
             this.context?.let { it1 ->
+                TimePickerDialog(
+                    it1, timePicker, expirationCalendar.get(Calendar.HOUR_OF_DAY),
+                    expirationCalendar.get(Calendar.MINUTE), false).show()
                 DatePickerDialog(
                     it1, datePicker, expirationCalendar.get(Calendar.YEAR),
                     expirationCalendar.get(Calendar.MONTH), expirationCalendar.get(Calendar.DAY_OF_MONTH)).show()
@@ -247,8 +254,10 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private fun taskItemsVisibility(){
         if(contentBinding.swTask.isChecked){
             contentBinding.fabAddExpirationDate.visibility = View.VISIBLE
+            contentBinding.fragmentReminder.visibility = View.VISIBLE
         } else{
             contentBinding.fabAddExpirationDate.visibility = View.GONE
+            contentBinding.fragmentReminder.visibility = View.GONE
         }
     }
 

@@ -5,7 +5,7 @@ import androidx.room.*
 import com.example.misnotas.model.Note
 
 @Dao
-interface DAO {
+interface NoteDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addNote(note: Note)
 

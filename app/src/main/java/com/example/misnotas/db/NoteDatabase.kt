@@ -5,15 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.misnotas.model.Note
+import com.example.misnotas.model.Reminder
 
 @Database(
-    entities = [Note::class],
-    version = 1,
-    exportSchema = false
+    entities = [Note::class, Reminder::class],
+    version = 1
 )
 
 abstract class NoteDatabase: RoomDatabase() {
-    abstract fun getNoteDao(): DAO
+    abstract fun getNoteDao(): NoteDAO
+
+    abstract fun getReminderDao(): ReminderDAO
 
     companion object{
         @Volatile

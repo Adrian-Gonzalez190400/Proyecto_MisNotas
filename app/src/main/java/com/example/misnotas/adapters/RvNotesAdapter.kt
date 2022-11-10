@@ -23,7 +23,7 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import org.commonmark.node.SoftLineBreak
 
-class RvNotesAdapter: ListAdapter<Note,RvNotesAdapter.NotesViewHolder>(DiffUtilCallback()) {
+class RvNotesAdapter: ListAdapter<Note,RvNotesAdapter.NotesViewHolder>(DiffUtilCallbackNotes()) {
 
     inner class NotesViewHolder(itemView: View):RecyclerView.ViewHolder(itemView ){
         private val contenBinding=NoteItemLayoutBinding.bind(itemView)
