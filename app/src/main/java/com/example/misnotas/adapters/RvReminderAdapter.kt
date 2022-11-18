@@ -19,7 +19,7 @@ import com.google.android.material.textview.MaterialTextView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RvReminderAdapter(): ListAdapter<Reminder, RvReminderAdapter.ReminderViewHolder>(DiffUtilCallbackReminder()) {
+class RvReminderAdapter: ListAdapter<Reminder, RvReminderAdapter.ReminderViewHolder>(DiffUtilCallbackReminder()) {
 
     inner class ReminderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         private val contenBinding=ReminderItemLayoutBinding.bind(itemView)
@@ -74,8 +74,7 @@ class RvReminderAdapter(): ListAdapter<Reminder, RvReminderAdapter.ReminderViewH
 //                }
 //
 //                delete.setOnClickListener {
-//                    val actpapa = MainActivity()
-//                    actpapa.deleteReminder(reminder)
+//
 //                }
             }
 

@@ -7,7 +7,7 @@ import com.example.misnotas.model.Note
 @Dao
 interface NoteDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addNote(note: Note)
+    suspend fun addNote(note: Note)//: Long id
 
     @Update
     suspend fun updateNote(note: Note)

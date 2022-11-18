@@ -96,7 +96,7 @@
                         android:textSize="22sp"
                         android:importantForAutofill="no"
                         android:fontFamily="@font/google_sans_medium"
-                        android:hint="Note Title"></EditText>
+                        android:hint="@string/note_title"></EditText>
 
                     <Switch
                         android:id="@+id/swTask"
@@ -105,7 +105,7 @@
                         android:layout_marginStart="22dp"
                         android:fontFamily="@font/google_sans_regular"
                         android:textSize="16sp"
-                        android:text="Task    ">
+                        android:text="@string/task">
                     </Switch>
 
                     <com.yahiaangelo.markdownedittext.MarkdownEditText
@@ -116,7 +116,7 @@
                         android:layout_marginTop="10dp"
                         android:background="@null"
                         android:fontFamily="@font/google_sans_regular"
-                        android:hint="Note"
+                        android:hint="@string/note"
                         android:importantForAutofill="no"
                         android:inputType="none"
                         android:padding="10dp"
@@ -161,7 +161,7 @@
                             android:fontFamily="@font/google_sans_regular"
                             android:paddingStart="0dp"
                             android:paddingEnd="20dp"
-                            android:text="Expiration date"
+                            android:text="@string/expiration_date"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                             android:textColor="@color/white"></TextView>
                     </LinearLayout>

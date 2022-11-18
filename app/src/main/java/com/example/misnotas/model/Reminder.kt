@@ -8,5 +8,6 @@ import java.io.Serializable
 data class Reminder(
     @PrimaryKey(autoGenerate = true)
     var id: Int=0,
+    //var idNote: Int,
     val date: String
 ): Serializable

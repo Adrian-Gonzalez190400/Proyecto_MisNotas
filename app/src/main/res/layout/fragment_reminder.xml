@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvReminders"
                 android:fontFamily="@font/google_sans_regular"
-                android:text="Reminders"
+                android:text="@string/reminders"
                 android:textSize="15sp"
                 android:textAlignment="center"
                 android:paddingStart="0dp"
@@ -82,7 +82,7 @@
                     android:fontFamily="@font/google_sans_regular"
                     android:paddingStart="0dp"
                     android:paddingEnd="20dp"
-                    android:text="Add reminder"
+                    android:text="@string/add_reminder"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                     android:textColor="@color/white"></TextView>
             </LinearLayout>
