@@ -9,12 +9,9 @@ interface ReminderDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addReminder(reminder: Reminder)
 
-    @Update
-    suspend fun updateReminder(reminder: Reminder)
+    @Query("DELETE FROM Reminder WHERE noteId = :id")
+    fun deleteAllReminder(id: Int)
 
-    @Query("SELECT * FROM Reminder ORDER BY date DESC")
-    fun getAllReminder(): LiveData<List<Reminder>>
-
-    @Delete
-    suspend fun deleteReminder(reminder: Reminder)
+    @Query("SELECT * FROM Reminder WHERE noteId = :id ORDER BY date DESC")
+    fun getAllReminder(id: Int): MutableList<Reminder>
 }

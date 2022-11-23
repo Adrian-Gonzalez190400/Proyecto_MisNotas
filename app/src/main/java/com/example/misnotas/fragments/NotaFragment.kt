@@ -74,6 +74,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
 
         recyclerViewDisplay()
         swipteToDelete(noteBinding.rvNote)
+        //todo eliminar recordatorios cuando se elimina la nota
 
         //implemets search here
         noteBinding.search.addTextChangedListener(object : TextWatcher{
@@ -145,7 +146,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
                     observerDataChanges()
                 }
                 val snackBar=Snackbar.make(
-                    requireView(),"Note Deleted", Snackbar.LENGTH_LONG
+                    requireView(),getString(R.string.note_deleted), Snackbar.LENGTH_LONG
                 ).addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>(){
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)

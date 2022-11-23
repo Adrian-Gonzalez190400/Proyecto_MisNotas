@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.databinding.ReminderItemLayoutBinding
+import com.example.misnotas.fragments.DataSourceReminder
 import com.example.misnotas.fragments.ReminderFragment
 import com.example.misnotas.model.Reminder
 import com.google.android.material.card.MaterialCardView
@@ -44,41 +45,42 @@ class RvReminderAdapter: ListAdapter<Reminder, RvReminderAdapter.ReminderViewHol
                 parent.transitionName="recyclerView_${reminder.id}"
                 date.text=reminder.date
 
-//                val datePicker = DatePickerDialog.OnDateSetListener { view, year, month, day ->
-//                    myCalendar.set(Calendar.YEAR, year)
-//                    myCalendar.set(Calendar.MONTH, month)
-//                    myCalendar.set(Calendar.DAY_OF_MONTH, day)
-//                    newDate = SimpleDateFormat.getInstance().format(myCalendar.time)
-//                }
-//
-//                val timePicker = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
-//                    myCalendar.set(Calendar.HOUR_OF_DAY, hour)
-//                    myCalendar.set(Calendar.MINUTE, minute)
-//                    newDate = SimpleDateFormat.getInstance().format(myCalendar.time)
-//                }
-//
-//                edit.setOnClickListener {
-//                    TimePickerDialog(
-//                        it.context, timePicker, myCalendar.get(Calendar.HOUR_OF_DAY),
-//                        myCalendar.get(Calendar.MINUTE), false).show()
-//                    DatePickerDialog(
-//                        it.context, datePicker, myCalendar.get(Calendar.YEAR),
-//                        myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
-//                    val actpapa = MainActivity()
-//                    actpapa.updateReminder(
-//                        Reminder(
-//                            reminder.id,
-//                            newDate
-//                        )
-//                    )
-//                }
-//
-//                delete.setOnClickListener {
-//
-//                }
+                val datePicker = DatePickerDialog.OnDateSetListener { view, year, month, day ->
+                    myCalendar.set(Calendar.YEAR, year)
+                    myCalendar.set(Calendar.MONTH, month)
+                    myCalendar.set(Calendar.DAY_OF_MONTH, day)
+                    newDate = SimpleDateFormat.getInstance().format(myCalendar.time)
+                }
+
+                val timePicker = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+                    myCalendar.set(Calendar.HOUR_OF_DAY, hour)
+                    myCalendar.set(Calendar.MINUTE, minute)
+                    newDate = SimpleDateFormat.getInstance().format(myCalendar.time)
+
+                    var editReminder = DataSourceReminder.lstReminder.get(position)
+                    DataSourceReminder.lstReminder.remove(editReminder)
+                    editReminder.date = newDate
+                    DataSourceReminder.lstReminder.add(editReminder)
+                    submitList(DataSourceReminder.lstReminder)
+                    notifyDataSetChanged()
+                }
+
+                edit.setOnClickListener {
+                    TimePickerDialog(
+                        it.context, timePicker, myCalendar.get(Calendar.HOUR_OF_DAY),
+                        myCalendar.get(Calendar.MINUTE), false).show()
+                    DatePickerDialog(
+                        it.context, datePicker, myCalendar.get(Calendar.YEAR),
+                        myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show()
+                }
+
+                delete.setOnClickListener {
+                    DataSourceReminder.lstReminder.remove(reminder)
+                    submitList(DataSourceReminder.lstReminder)
+                    notifyDataSetChanged()
+                }
             }
 
         }
     }
-
 }

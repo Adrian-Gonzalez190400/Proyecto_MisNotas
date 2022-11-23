@@ -25,11 +25,8 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.adapters.RvReminderAdapter
 import com.example.misnotas.databinding.FragmentReminderBinding
-import com.example.misnotas.model.Note
-import com.example.misnotas.model.Reminder
-import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
-import com.example.misnotas.viewModel.ReminderActivityViewModel
+import com.example.misnotas.model.Reminder
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
@@ -43,7 +40,6 @@ import java.util.concurrent.TimeUnit
 
 class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
     private lateinit var reminderBinding: FragmentReminderBinding
-    private  val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
     private lateinit var rvAdapter: RvReminderAdapter
     private val myCalendar = Calendar.getInstance()
 
@@ -80,10 +76,9 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
         val timePicker = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
             myCalendar.set(Calendar.HOUR_OF_DAY, hour)
             myCalendar.set(Calendar.MINUTE, minute)
-            reminderActivityViewModel.saveReminder(
+            addReminder(
                 Reminder(
-                    0,
-                    SimpleDateFormat.getInstance().format(myCalendar.time)
+                    0, 0, SimpleDateFormat.getInstance().format(myCalendar.time)
                 )
             )
         }
@@ -101,6 +96,8 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
 
         recyclerViewDisplay()
 
+        dataChanged()
+
         reminderBinding.rvReminder.setOnScrollChangeListener{_,scrollX,scrollY,_,oldScrollY ->
             when{
                 scrollY > oldScrollY -> {
@@ -116,10 +113,14 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
         }
     }
 
-    private fun observerDataChanges() {
-        reminderActivityViewModel.getAllReminder().observe(viewLifecycleOwner){list ->
-            rvAdapter.submitList(list)
-        }
+    private fun dataChanged(){
+        rvAdapter.submitList(DataSourceReminder.lstReminder)
+        reminderBinding.rvReminder.adapter?.notifyDataSetChanged()
+    }
+
+    private fun addReminder(rem: Reminder){
+        DataSourceReminder.lstReminder.add(rem)
+        dataChanged()
     }
 
     private fun recyclerViewDisplay() {
@@ -132,10 +133,9 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
     /*Usaremos adaptador de lista  -> Actualiza en automatico el contenido despues de hacer un cambio */
     private fun setUpRecyclerView(spanCount: Int) {
         reminderBinding.rvReminder.apply {
-            //layoutManager= StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
             layoutManager= LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
-            rvAdapter= RvReminderAdapter()
+            rvAdapter= RvReminderAdapter(/*DataSourceReminder.lstReminder*/)
             rvAdapter.stateRestorationPolicy=
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter=rvAdapter
@@ -145,6 +145,5 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
                 true
             }
         }
-        observerDataChanges()
     }
 }

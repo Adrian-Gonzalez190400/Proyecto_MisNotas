@@ -9,7 +9,7 @@ import com.example.misnotas.model.Reminder
 
 @Database(
     entities = [Note::class, Reminder::class],
-    version = 2
+    version = 1
 )
 
 abstract class NoteDatabase: RoomDatabase() {
@@ -32,6 +32,6 @@ abstract class NoteDatabase: RoomDatabase() {
             context.applicationContext,
             NoteDatabase::class.java,
             "note_database"
-        ).build()
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 }

@@ -23,5 +23,8 @@
     <string name="my_notes">My Notes</string>
     <string name="note_title">Note Title</string>
     <string name="task">Task</string>
-
+    <string name="empty">Something is Empty</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_deleted">Note deleted</string>
+    <string name="undo">UNDO</string>
 </resources>

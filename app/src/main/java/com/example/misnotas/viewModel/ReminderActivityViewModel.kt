@@ -13,13 +13,9 @@ class ReminderActivityViewModel(private val repository: ReminderRepository): Vie
         repository.addReminder(newReminder)
     }
 
-    fun updateReminder(existingReminder: Reminder)= viewModelScope.launch(Dispatchers.IO) {
-        repository.updateReminder(existingReminder)
+    fun deleteAllReminder(id: Int)= viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAllReminder(id)
     }
 
-    fun deleteReminder(existingReminder: Reminder)= viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteReminder(existingReminder)
-    }
-
-    fun getAllReminder(): LiveData<List<Reminder>> = repository.getReminder()
+    fun getAllReminder(id: Int): MutableList<Reminder> = repository.getReminder(id)
 }

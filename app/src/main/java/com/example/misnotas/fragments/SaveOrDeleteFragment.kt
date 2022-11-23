@@ -26,6 +26,7 @@ import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.NoteActivityViewModel
+import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.transition.MaterialContainerTransform
@@ -45,11 +46,12 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private var color=-1
     private lateinit var result: String
     private val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
+    private val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
     private val currentDate = SimpleDateFormat.getInstance().format(Date()) //Obtener fecha actual
     private val job= CoroutineScope(Dispatchers.Main)
     private val args: SaveOrDeleteFragmentArgs by navArgs()
     private val expirationCalendar = Calendar.getInstance()
-    private var expirationDate = "Expiration date"
+    private var expirationDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,9 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         }
         sharedElementEnterTransition=animation
         sharedElementReturnTransition=animation
+
+        val note=args.note
+        if(note!=null) DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,12 +74,14 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         navController=Navigation.findNavController(view)
         val activity=activity as MainActivity
 
+        expirationDate = getString(R.string.expiration_date)
+
         ViewCompat.setTransitionName(
             contentBinding.noteContentFragmentParent,
             "recyclefiew_${args.note?.id}"
         )
 
-        contentBinding.backBtn. setOnClickListener{
+        contentBinding.backBtn.setOnClickListener{
              requireView().hideKeyboard()
             navController.popBackStack()
         }
@@ -163,6 +170,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         setUpNote()
     }
 
+    override fun onDestroy() {
+        DataSourceReminder.lstReminder.clear()
+        super.onDestroy()
+    }
+
     private fun setUpNote() {
         val note=args.note
         val title=contentBinding.etTitle
@@ -179,8 +191,10 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             title.setText(note.title)
             content.renderMD(note.content)
             task.isChecked=note.isTask
-            if(note.isTask) expiration.text=note.expirationDate
-            else expiration.text="Expiration date"
+            if(note.isTask){
+                expiration.text=note.expirationDate
+                expirationDate= note.expirationDate.toString()
+            } else expiration.text=getString(R.string.expiration_date)
             lastEdited.text=getString(R.string.edited_on,note.creationDate)
             color=note.color
             taskItemsVisibility()
@@ -199,8 +213,8 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private fun saveNote() {
         if(contentBinding.etNoteContent.text.toString().isEmpty() ||
             contentBinding.etTitle.text.toString().isEmpty() ||
-            (contentBinding.swTask.isChecked && expirationDate=="Expiration date")){
-            Toast.makeText(activity, "Something is Empty", Toast.LENGTH_SHORT).show()
+            (contentBinding.swTask.isChecked && expirationDate==getString(R.string.expiration_date))){
+            Toast.makeText(activity, getString(R.string.empty), Toast.LENGTH_SHORT).show()
         }else{
             note=args.note
 
@@ -217,7 +231,17 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             color
                         )
                     )
-                    result="Note Saved"
+
+                    //todo corregir la forma de buscar u obtener el ID DE LA NOTA
+                    val noteId = noteActivityViewModel.getLastNoteId()
+                    Toast.makeText(this.context, noteId.toString(), Toast.LENGTH_SHORT).show()
+
+                    for(reminder in DataSourceReminder.lstReminder){
+                        reminder.noteId = noteId
+                        reminderActivityViewModel.saveReminder(reminder)
+                    }
+
+                    result=getString(R.string.note_saved)
                     setFragmentResult(
                         "key",
                         bundleOf("bundleKey" to result)
@@ -227,6 +251,12 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                 else -> {
                     // update note
                     updateNote()
+                    val noteId = note!!.id
+                    reminderActivityViewModel.deleteAllReminder(noteId)
+                    for(reminder in DataSourceReminder.lstReminder){
+                        reminder.noteId = noteId
+                        reminderActivityViewModel.saveReminder(reminder)
+                    }
                     navController.popBackStack()
                 }
             }

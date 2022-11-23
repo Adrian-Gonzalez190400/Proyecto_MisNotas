@@ -7,11 +7,24 @@ import com.example.misnotas.model.Note
 import com.example.misnotas.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NoteActivityViewModel(private val repository: NoteRepository): ViewModel() {
     fun saveNote(newNote: Note)= viewModelScope.launch(Dispatchers.IO) {
         repository.addNote(newNote)
     }
+
+//    fun saveNote(newNote: Note): Long{
+//        var id: Long = -1
+//        viewModelScope.launch(Dispatchers.IO) {
+//            id = repository.addNote(newNote)
+//        }
+//        return id
+//    }
+
+//    suspend fun saveNote(newNote: Note): Long= withContext(Dispatchers.IO) {
+//        return@withContext repository.addNote(newNote)
+//    }
 
     fun updateNote(existingNote: Note)= viewModelScope.launch(Dispatchers.IO) {
         repository.updateNote(existingNote)
@@ -30,4 +43,6 @@ class NoteActivityViewModel(private val repository: NoteRepository): ViewModel()
     fun getAllSimpleNotes(): LiveData<List<Note>> = repository.getSimpleNote()
 
     fun getAllTasks(): LiveData<List<Note>> = repository.getTask()
+
+    fun getLastNoteId(): Int = repository.getLastNoteId()
 }
