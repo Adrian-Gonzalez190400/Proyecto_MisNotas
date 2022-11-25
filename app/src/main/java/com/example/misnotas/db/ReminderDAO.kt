@@ -7,7 +7,7 @@ import com.example.misnotas.model.Reminder
 @Dao
 interface ReminderDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addReminder(reminder: Reminder)
+    suspend fun addReminder(reminders: List<Reminder>)
 
     @Query("DELETE FROM Reminder WHERE noteId = :id")
     fun deleteAllReminder(id: Int)

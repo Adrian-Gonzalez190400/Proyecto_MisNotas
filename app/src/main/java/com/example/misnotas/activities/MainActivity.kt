@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             setContentView(binding.root)
             val noteRepository=NoteRepository(NoteDatabase(this))
             val reminderRepository=ReminderRepository(NoteDatabase(this))
-            val noteActivityViewModelFactory=NoteActivityViewModelFactory(noteRepository)
+            val noteActivityViewModelFactory=NoteActivityViewModelFactory(noteRepository, reminderRepository)
             val reminderActivityViewModelFactory=ReminderActivityViewModelFactory(reminderRepository)
             noteActivityViewModel=ViewModelProvider(this,
             noteActivityViewModelFactory)[NoteActivityViewModel::class.java]
@@ -40,12 +40,4 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-//    fun deleteReminder(reminder: Reminder){
-//        reminderActivityViewModel.deleteReminder(reminder)
-//    }
-//
-//    fun updateReminder(reminder: Reminder){
-//        reminderActivityViewModel.updateReminder(reminder)
-//    }
 }

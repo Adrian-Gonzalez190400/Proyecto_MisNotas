@@ -9,13 +9,5 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ReminderActivityViewModel(private val repository: ReminderRepository): ViewModel()  {
-    fun saveReminder(newReminder: Reminder)= viewModelScope.launch(Dispatchers.IO) {
-        repository.addReminder(newReminder)
-    }
-
-    fun deleteAllReminder(id: Int)= viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteAllReminder(id)
-    }
-
     fun getAllReminder(id: Int): MutableList<Reminder> = repository.getReminder(id)
 }

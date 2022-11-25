@@ -4,16 +4,14 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.clearFragmentResult
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -21,7 +19,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.databinding.BottomSheetLayoutBinding
-import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
@@ -36,7 +33,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
 
 class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
@@ -64,6 +60,8 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         sharedElementReturnTransition=animation
 
         val note=args.note
+
+        DataSourceReminder.lstReminder.clear()
         if(note!=null) DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
     }
 
@@ -170,11 +168,6 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         setUpNote()
     }
 
-    override fun onDestroy() {
-        DataSourceReminder.lstReminder.clear()
-        super.onDestroy()
-    }
-
     private fun setUpNote() {
         val note=args.note
         val title=contentBinding.etTitle
@@ -217,6 +210,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             Toast.makeText(activity, getString(R.string.empty), Toast.LENGTH_SHORT).show()
         }else{
             note=args.note
+            if(!contentBinding.swTask.isChecked) DataSourceReminder.lstReminder.clear()
 
             when(note){
                 null->{
@@ -229,17 +223,8 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             currentDate,
                             expirationDate,
                             color
-                        )
+                        ), DataSourceReminder.lstReminder
                     )
-
-                    //todo corregir la forma de buscar u obtener el ID DE LA NOTA
-                    val noteId = noteActivityViewModel.getLastNoteId()
-                    Toast.makeText(this.context, noteId.toString(), Toast.LENGTH_SHORT).show()
-
-                    for(reminder in DataSourceReminder.lstReminder){
-                        reminder.noteId = noteId
-                        reminderActivityViewModel.saveReminder(reminder)
-                    }
 
                     result=getString(R.string.note_saved)
                     setFragmentResult(
@@ -251,12 +236,6 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                 else -> {
                     // update note
                     updateNote()
-                    val noteId = note!!.id
-                    reminderActivityViewModel.deleteAllReminder(noteId)
-                    for(reminder in DataSourceReminder.lstReminder){
-                        reminder.noteId = noteId
-                        reminderActivityViewModel.saveReminder(reminder)
-                    }
                     navController.popBackStack()
                 }
             }
@@ -276,7 +255,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      currentDate,
                      expirationDate,
                      color
-                 )
+                 ), DataSourceReminder.lstReminder
              )
         }
     }

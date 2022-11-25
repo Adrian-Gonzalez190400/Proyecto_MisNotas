@@ -24,9 +24,6 @@ interface NoteDAO {
     @Query("SELECT * FROM Note WHERE title LIKE :query OR content LIKE :query ORDER BY creationDate DESC")
     fun searchNote(query: String): LiveData<List<Note>>
 
-    @Query("SELECT MAX(id) FROM Note")
-    fun getLastNoteId(): Int
-
     @Delete
     suspend fun deleteNote(note: Note)
 }
