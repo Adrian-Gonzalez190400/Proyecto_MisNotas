@@ -21,8 +21,8 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_scrollFlags="scroll|enterAlways">
+                android:background="@color/white">
+                <!--app:layout_scrollFlags="scroll|enterAlways"> -->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -138,7 +138,9 @@
                 android:contentDescription=" "
                 app:fabSize="normal"
                 app:borderWidth="0dp"
-                app:useCompatPadding="false"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+                app:useCompatPadding="false">
+
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
             <TextView
                 android:layout_width="wrap_content"

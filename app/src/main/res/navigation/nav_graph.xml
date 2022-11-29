@@ -8,20 +8,23 @@
     <fragment
         android:id="@+id/notaFragment"
         android:name="com.example.misnotas.fragments.NotaFragment"
-        android:label="fragment_nota"
+        android:label="Todas las notas"
         tools:layout="@layout/fragment_nota" >
         <action
             android:id="@+id/action_notaFragment_to_saveOrDeleteFragment"
             app:destination="@id/saveOrDeleteFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/saveOrDeleteFragment"
         android:name="com.example.misnotas.fragments.SaveOrDeleteFragment"
-        android:label="fragment_save_or_delete"
+        android:label="Editar"
         tools:layout="@layout/fragment_save_or_delete" >
         <action
             android:id="@+id/action_saveOrDeleteFragment_to_notaFragment"
-            app:destination="@id/notaFragment" />
+            app:destination="@id/notaFragment"
+            app:popUpTo="@id/notaFragment"
+            app:popUpToInclusive="true" />
 
         <argument android:name="Note"
             android:defaultValue="@null"
@@ -29,6 +32,25 @@
             app:nullable="true">
 
         </argument>
+        <action
+            android:id="@+id/action_saveOrDeleteFragment_to_nota_SimpleFragment"
+            app:destination="@id/nota_SimpleFragment"
+            />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/nota_SimpleFragment"
+        android:name="com.example.misnotas.fragments.Nota_SimpleFragment"
+        android:label="Notas Simples"
+         tools:layout="@layout/fragment_nota">
+        <action
+            android:id="@+id/action_nota_SimpleFragment_to_saveOrDeleteFragment"
+            app:destination="@id/saveOrDeleteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.example.misnotas.fragments.TaskFragment"
+        android:label="Tareas"
+        tools:layout="@layout/fragment_nota"/>
 </navigation>

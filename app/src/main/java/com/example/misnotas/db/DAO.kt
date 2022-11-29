@@ -15,10 +15,10 @@ interface DAO {
     @Query("SELECT * FROM Note ORDER BY creationDate DESC")
     fun getAllNote(): LiveData<List<Note>>
 
-    @Query("SELECT * FROM Note WHERE isTask=false ORDER BY creationDate DESC")
+    @Query("SELECT * FROM Note WHERE isTask=0 ORDER BY creationDate DESC")
     fun getAllSimpleNote(): LiveData<List<Note>>
 
-    @Query("SELECT * FROM Note WHERE isTask=true  ORDER BY creationDate DESC")
+    @Query("SELECT * FROM Note WHERE isTask=1  ORDER BY creationDate DESC")
     fun getAllTask(): LiveData<List<Note>>
 
     @Query("SELECT * FROM Note WHERE title LIKE :query OR content LIKE :query ORDER BY creationDate DESC")

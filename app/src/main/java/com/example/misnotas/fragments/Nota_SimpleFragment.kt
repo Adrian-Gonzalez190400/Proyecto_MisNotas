@@ -32,7 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class NotaFragment : Fragment(R.layout.fragment_nota) {
+class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
 
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
@@ -179,7 +179,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
     }
 
     private fun observerDataChanges() {
-        noteActivityViewModel.getAllNotes().observe(viewLifecycleOwner){list ->
+        noteActivityViewModel.getAllSimpleNotes().observe(viewLifecycleOwner){list ->
             noteBinding.noData.isVisible=list.isEmpty()
             rvAdapter.submitList(list)
         }
