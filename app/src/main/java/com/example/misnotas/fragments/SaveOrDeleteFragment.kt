@@ -1,18 +1,17 @@
 package com.example.misnotas.fragments
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.clearFragmentResult
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -20,11 +19,11 @@ import androidx.navigation.fragment.navArgs
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.databinding.BottomSheetLayoutBinding
-import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.NoteActivityViewModel
+import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.transition.MaterialContainerTransform
@@ -43,12 +42,12 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private var color=-1
     private lateinit var result: String
     private val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
+    private val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
     private val currentDate = SimpleDateFormat.getInstance().format(Date()) //Obtener fecha actual
     private val job= CoroutineScope(Dispatchers.Main)
     private val args: SaveOrDeleteFragmentArgs by navArgs()
     private val expirationCalendar = Calendar.getInstance()
-    private var expirationDate = "Expiration date"
-
+    private var expirationDate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +58,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         }
         sharedElementEnterTransition=animation
         sharedElementReturnTransition=animation
+
+        val note=args.note
+
+        DataSourceReminder.lstReminder.clear()
+        if(note!=null) DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,12 +72,14 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         navController=Navigation.findNavController(view)
         val activity=activity as MainActivity
 
+        expirationDate = getString(R.string.expiration_date)
+
         ViewCompat.setTransitionName(
             contentBinding.noteContentFragmentParent,
-            "recyclerView_${args.note?.id}"
+            "recyclefiew_${args.note?.id}"
         )
 
-        contentBinding.backBtn. setOnClickListener{
+        contentBinding.backBtn.setOnClickListener{
              requireView().hideKeyboard()
             navController.popBackStack()
         }
@@ -101,16 +107,22 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             expirationCalendar.set(Calendar.YEAR, year)
             expirationCalendar.set(Calendar.MONTH, month)
             expirationCalendar.set(Calendar.DAY_OF_MONTH, day)
-            expirationCalendar.set(Calendar.HOUR, 11)
-            expirationCalendar.set(Calendar.MINUTE, 59)
-            expirationCalendar.set(Calendar.SECOND, 0)
-            expirationCalendar.set(Calendar.AM_PM, 1)
+            expirationDate = SimpleDateFormat.getInstance().format(expirationCalendar.time)
+            contentBinding.tvExpirationDate.text = expirationDate
+        }
+
+        val timePicker = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+            expirationCalendar.set(Calendar.HOUR_OF_DAY, hour)
+            expirationCalendar.set(Calendar.MINUTE, minute)
             expirationDate = SimpleDateFormat.getInstance().format(expirationCalendar.time)
             contentBinding.tvExpirationDate.text = expirationDate
         }
 
         contentBinding.fabAddExpirationDate.setOnClickListener {
             this.context?.let { it1 ->
+                TimePickerDialog(
+                    it1, timePicker, expirationCalendar.get(Calendar.HOUR_OF_DAY),
+                    expirationCalendar.get(Calendar.MINUTE), false).show()
                 DatePickerDialog(
                     it1, datePicker, expirationCalendar.get(Calendar.YEAR),
                     expirationCalendar.get(Calendar.MONTH), expirationCalendar.get(Calendar.DAY_OF_MONTH)).show()
@@ -172,8 +184,10 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             title.setText(note.title)
             content.renderMD(note.content)
             task.isChecked=note.isTask
-            if(note.isTask) expiration.text=note.expirationDate
-            else expiration.text="Expiration date"
+            if(note.isTask){
+                expiration.text=note.expirationDate
+                expirationDate= note.expirationDate.toString()
+            } else expiration.text=getString(R.string.expiration_date)
             lastEdited.text=getString(R.string.edited_on,note.creationDate)
             color=note.color
             taskItemsVisibility()
@@ -192,10 +206,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private fun saveNote() {
         if(contentBinding.etNoteContent.text.toString().isEmpty() ||
             contentBinding.etTitle.text.toString().isEmpty() ||
-            (contentBinding.swTask.isChecked && expirationDate=="Expiration date")){
-            Toast.makeText(activity, "Something is Empty", Toast.LENGTH_SHORT).show()
+            (contentBinding.swTask.isChecked && expirationDate==getString(R.string.expiration_date))){
+            Toast.makeText(activity, getString(R.string.empty), Toast.LENGTH_SHORT).show()
         }else{
             note=args.note
+            if(!contentBinding.swTask.isChecked) DataSourceReminder.lstReminder.clear()
 
             when(note){
                 null->{
@@ -208,9 +223,10 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             currentDate,
                             expirationDate,
                             color
-                        )
+                        ), DataSourceReminder.lstReminder
                     )
-                    result="Note Saved"
+
+                    result=getString(R.string.note_saved)
                     setFragmentResult(
                         "key",
                         bundleOf("bundleKey" to result)
@@ -239,7 +255,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      currentDate,
                      expirationDate,
                      color
-                 )
+                 ), DataSourceReminder.lstReminder
              )
         }
     }
@@ -247,8 +263,10 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private fun taskItemsVisibility(){
         if(contentBinding.swTask.isChecked){
             contentBinding.fabAddExpirationDate.visibility = View.VISIBLE
+            contentBinding.fragmentReminder.visibility = View.VISIBLE
         } else{
             contentBinding.fabAddExpirationDate.visibility = View.GONE
+            contentBinding.fragmentReminder.visibility = View.GONE
         }
     }
 

@@ -15,22 +15,27 @@ import androidx.navigation.ui.*
 import com.example.misnotas.R
 import com.example.misnotas.databinding.ActivityMainBinding
 import com.example.misnotas.db.NoteDatabase
+import com.example.misnotas.model.Reminder
 import com.example.misnotas.repository.NoteRepository
+import com.example.misnotas.repository.ReminderRepository
 import com.example.misnotas.viewModel.NoteActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModelFactory
+import com.example.misnotas.viewModel.ReminderActivityViewModel
+import com.example.misnotas.viewModel.ReminderActivityViewModelFactory
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var noteActivityViewModel: NoteActivityViewModel
+    lateinit var reminderActivityViewModel: ReminderActivityViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
 
 
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        binding=ActivityMainBinding.inflate(layoutInflater)
@@ -38,9 +43,14 @@ class MainActivity : AppCompatActivity() {
         try {
             setContentView(binding.root)
             val noteRepository=NoteRepository(NoteDatabase(this))
-            val noteActivityViewModelFactory=NoteActivityViewModelFactory(noteRepository)
+            val reminderRepository=ReminderRepository(NoteDatabase(this))
+            val noteActivityViewModelFactory=NoteActivityViewModelFactory(noteRepository, reminderRepository)
+            val reminderActivityViewModelFactory=ReminderActivityViewModelFactory(reminderRepository)
             noteActivityViewModel=ViewModelProvider(this,
                 noteActivityViewModelFactory)[NoteActivityViewModel::class.java]
+
+            reminderActivityViewModel=ViewModelProvider(this,
+            reminderActivityViewModelFactory)[ReminderActivityViewModel::class.java]
         }catch (e: Exception){
             Log.d("TAG","Error")
         }

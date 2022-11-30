@@ -23,6 +23,7 @@ import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.NoteActivityViewModel
+import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
@@ -36,6 +37,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
 
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
+    private  val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
     private lateinit var rvAdapter: RvNotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -135,6 +137,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position=viewHolder.absoluteAdapterPosition
                 val note=rvAdapter.currentList[position]
+                val reminders=reminderActivityViewModel.getAllReminder(note.id)
                 var actionBtnTapped=false
                 noteActivityViewModel.deleteNote(note)
                 noteBinding.search.apply {
@@ -145,7 +148,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
                     observerDataChanges()
                 }
                 val snackBar=Snackbar.make(
-                    requireView(),"Note Deleted", Snackbar.LENGTH_LONG
+                    requireView(),getString(R.string.note_deleted), Snackbar.LENGTH_LONG
                 ).addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>(){
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
@@ -153,7 +156,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
 
                     override fun onShown(transientBottomBar: Snackbar?) {
                         transientBottomBar?.setAction("UNDO"){
-                            noteActivityViewModel.saveNote(note)
+                            noteActivityViewModel.saveNote(note, reminders)
                             actionBtnTapped=true
                             noteBinding.noData.isVisible=false
                         }

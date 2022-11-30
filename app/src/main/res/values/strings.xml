@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MisNotas</string>
 
-    <string name="search_here">Search here....</string>
+    <string name="search_here">Search here...</string>
     <string name="clear">clear</string>
     <string name="no_data">no_data</string>
     <string name="add_note">Add Note</string>
@@ -15,6 +15,16 @@
         remaining essentially unchanged.
     </string>
     <string name="edited_on">Edited on: %1$s</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reminders">Reminders</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="note">Note</string>
+    <string name="expiration_date">Expiration date</string>
+    <string name="my_notes">My Notes</string>
+    <string name="note_title">Note Title</string>
+    <string name="task">Task</string>
+    <string name="empty">Something is Empty</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_deleted">Note deleted</string>
+    <string name="undo">UNDO</string>
 </resources>
