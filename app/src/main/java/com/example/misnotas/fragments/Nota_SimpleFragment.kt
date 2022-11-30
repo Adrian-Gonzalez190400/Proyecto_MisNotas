@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
-import com.example.misnotas.adapters.RvNotesAdapter
+import com.example.misnotas.adapters.RvSimpleNotesAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
@@ -36,7 +36,7 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
 
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
-    private lateinit var rvAdapter: RvNotesAdapter
+    private lateinit var rvAdapter: RvSimpleNotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -64,12 +64,12 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
 
         noteBinding.addNoteFab.setOnClickListener{
             noteBinding.appBarLayout.visibility=View.INVISIBLE
-            navController.navigate(NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment())
+            navController.navigate(Nota_SimpleFragmentDirections.actionNotaSimpleFragmentToSaveOrDeleteFragment())
         }
 
         noteBinding.innerFab.setOnClickListener{
             noteBinding.appBarLayout.visibility=View.INVISIBLE
-            navController.navigate(NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment())
+            navController.navigate(Nota_SimpleFragmentDirections.actionNotaSimpleFragmentToSaveOrDeleteFragment())
         }
 
         recyclerViewDisplay()
@@ -197,7 +197,7 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
         noteBinding.rvNote.apply {
             layoutManager=StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            rvAdapter= RvNotesAdapter()
+            rvAdapter= RvSimpleNotesAdapter()
             rvAdapter.stateRestorationPolicy=
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter=rvAdapter

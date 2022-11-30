@@ -26,5 +26,9 @@
     <string name="empty">Something is Empty</string>
     <string name="note_saved">Note saved</string>
     <string name="note_deleted">Note deleted</string>
+    <string name="edit">Edit</string>
+    <string name="all_notes">All notes</string>
+    <string name="simple_notes">Simple notes</string>
+    <string name="tasks">Tasks</string>
     <string name="undo">UNDO</string>
 </resources>
