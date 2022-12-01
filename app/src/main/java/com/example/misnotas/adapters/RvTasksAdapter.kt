@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.misnotas.R
 import com.example.misnotas.databinding.NoteItemLayoutBinding
 import com.example.misnotas.fragments.NotaFragmentDirections
+import com.example.misnotas.fragments.TaskFragmentDirections
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
 import com.google.android.material.card.MaterialCardView
@@ -23,7 +24,7 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import org.commonmark.node.SoftLineBreak
 
-class RvNotesAdapter: ListAdapter<Note,RvNotesAdapter.NotesViewHolder>(DiffUtilCallbackNotes()) {
+class RvTasksAdapter: ListAdapter<Note,RvTasksAdapter.NotesViewHolder>(DiffUtilCallbackNotes()) {
 
     inner class NotesViewHolder(itemView: View):RecyclerView.ViewHolder(itemView ){
         private val contenBinding=NoteItemLayoutBinding.bind(itemView)
@@ -62,7 +63,7 @@ class RvNotesAdapter: ListAdapter<Note,RvNotesAdapter.NotesViewHolder>(DiffUtilC
                 parent.setCardBackgroundColor(note.color)
 
                 itemView.setOnClickListener{
-                    val action=NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment()
+                    val action=TaskFragmentDirections.actionTaskFragmentToSaveOrDeleteFragment()
                         .setNote(note)
                     val extras= FragmentNavigatorExtras(parent to "recyclerView_${note.id}")
                     it.hideKeyboard()
@@ -70,7 +71,7 @@ class RvNotesAdapter: ListAdapter<Note,RvNotesAdapter.NotesViewHolder>(DiffUtilC
 
                 }
                 content.setOnClickListener {
-                    val action=NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment()
+                    val action=TaskFragmentDirections.actionTaskFragmentToSaveOrDeleteFragment()
                         .setNote(note)
                     val extras= FragmentNavigatorExtras(parent to "recyclerView_${note.id}")
                     it.hideKeyboard()

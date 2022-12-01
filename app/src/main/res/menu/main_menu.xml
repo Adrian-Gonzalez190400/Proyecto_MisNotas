@@ -3,17 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/notaFragment"
-        android:title="Todas las notas"
+        android:title="@string/all_notes"
         />
 
     <item
         android:id="@+id/nota_SimpleFragment"
-        android:title="Notas Simples"
+        android:title="@string/simple_notes"
         >
     </item>
     <item
         android:id="@+id/taskFragment"
-        android:title="Tareas"
+        android:title="@string/tasks"
         >
     </item>
 
