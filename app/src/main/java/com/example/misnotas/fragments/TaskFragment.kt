@@ -125,9 +125,6 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
             }
         }
 
-
-
-
     }
 
     private fun swipteToDelete(rvNote: RecyclerView) {

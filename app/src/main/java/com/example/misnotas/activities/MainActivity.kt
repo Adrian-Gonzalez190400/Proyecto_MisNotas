@@ -59,8 +59,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                R.id.notaFragment,
                R.id.nota_SimpleFragment,
-               R.id.taskFragment,
-               R.id.saveOrDeleteFragment
+               R.id.taskFragment
             ),
             binding.drawerLayout
         )

@@ -16,10 +16,5 @@
         android:title="Tareas"
         >
     </item>
-    <item
-        android:id="@+id/saveOrDeleteFragment"
-        android:title="EditarFragment"
-        />
-
 
 </menu>

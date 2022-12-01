@@ -63,8 +63,10 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
         }
 
         noteBinding.addNoteFab.setOnClickListener{
-            noteBinding.appBarLayout.visibility=View.INVISIBLE
-            navController.navigate(NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment())
+
+                noteBinding.appBarLayout.visibility = View.INVISIBLE
+                navController.navigate(NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment())
+
         }
 
         noteBinding.innerFab.setOnClickListener{
@@ -208,6 +210,9 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
             }
         }
         observerDataChanges()
+        /*
+        * java.lang.IllegalArgumentException:
+        * Navigation action/destination com.example.misnotas:id/action_notaFragment_to_saveOrDeleteFragment cannot be found from the current destination Destination(com.example.misnotas:id/nota_SimpleFragment) label=Notas Simples class=com.example.misnotas.fragments.Nota_SimpleFragment*/
 
     }
 

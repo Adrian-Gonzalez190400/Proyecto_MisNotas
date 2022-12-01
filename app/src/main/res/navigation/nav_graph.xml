@@ -32,10 +32,7 @@
             app:nullable="true">
 
         </argument>
-        <action
-            android:id="@+id/action_saveOrDeleteFragment_to_nota_SimpleFragment"
-            app:destination="@id/nota_SimpleFragment"
-            />
+
 
     </fragment>
 
@@ -44,9 +41,6 @@
         android:name="com.example.misnotas.fragments.Nota_SimpleFragment"
         android:label="Notas Simples"
          tools:layout="@layout/fragment_nota">
-        <action
-            android:id="@+id/action_nota_SimpleFragment_to_saveOrDeleteFragment"
-            app:destination="@id/saveOrDeleteFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskFragment"
