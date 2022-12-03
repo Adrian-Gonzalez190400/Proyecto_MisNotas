@@ -31,4 +31,8 @@
     <string name="simple_notes">Simple notes</string>
     <string name="tasks">Tasks</string>
     <string name="undo">UNDO</string>
+    <string name="add_picture">Add picture</string>
+    <string name="pictures">PICTURES</string>
+    <string name="add_image">add image</string>
+    <string name="images">Images</string>
 </resources>

@@ -7,7 +7,7 @@ import java.io.Serializable
 data class Multimedia (
     @PrimaryKey(autoGenerate = true)
     var id: Int=0,
-    var noteId: Long,
+    var noteId: Int,
     val type: Int,
     val path: String,
     var date: String

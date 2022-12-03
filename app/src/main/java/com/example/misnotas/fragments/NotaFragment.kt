@@ -22,6 +22,7 @@ import com.example.misnotas.adapters.RvNotesAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
+import com.example.misnotas.viewModel.MultimediaActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModel
 import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -38,6 +39,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
     private  val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
+    private val multimediaActivityViewModel:MultimediaActivityViewModel by activityViewModels()
     private lateinit var rvAdapter: RvNotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -53,6 +55,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         noteBinding=FragmentNotaBinding.bind(view)
+
         val activity=activity as MainActivity
         val navController=Navigation.findNavController(view)
         requireView().hideKeyboard()
@@ -138,6 +141,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
                 val position=viewHolder.absoluteAdapterPosition
                 val note=rvAdapter.currentList[position]
                 val reminders=reminderActivityViewModel.getAllReminder(note.id)
+                val multimedia=multimediaActivityViewModel.getAllMultimedia(note.id)
                 var actionBtnTapped=false
                 noteActivityViewModel.deleteNote(note)
                 noteBinding.search.apply {
@@ -156,7 +160,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
 
                     override fun onShown(transientBottomBar: Snackbar?) {
                         transientBottomBar?.setAction("UNDO"){
-                            noteActivityViewModel.saveNote(note, reminders)
+                            noteActivityViewModel.saveNote(note, reminders,multimedia)
                             actionBtnTapped=true
                             noteBinding.noData.isVisible=false
                         }

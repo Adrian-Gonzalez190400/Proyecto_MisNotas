@@ -22,6 +22,7 @@ import com.example.misnotas.databinding.BottomSheetLayoutBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
+import com.example.misnotas.viewModel.MultimediaActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModel
 import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -43,6 +44,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
     private lateinit var result: String
     private val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
     private val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
+    private val multimediaActivityViewModel: MultimediaActivityViewModel by activityViewModels()
     private val currentDate = SimpleDateFormat.getInstance().format(Date()) //Obtener fecha actual
     private val job= CoroutineScope(Dispatchers.Main)
     private val args: SaveOrDeleteFragmentArgs by navArgs()
@@ -62,7 +64,12 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         val note=args.note
 
         DataSourceReminder.lstReminder.clear()
-        if(note!=null) DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
+        DataSourceImage.lstImage.clear()
+
+        if(note!=null){
+            DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
+            DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllMultimedia(note.id))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -223,7 +230,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             currentDate,
                             expirationDate,
                             color
-                        ), DataSourceReminder.lstReminder
+                        ), DataSourceReminder.lstReminder,DataSourceImage.lstImage
                     )
 
                     result=getString(R.string.note_saved)
@@ -255,7 +262,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      currentDate,
                      expirationDate,
                      color
-                 ), DataSourceReminder.lstReminder
+                 ), DataSourceReminder.lstReminder,DataSourceImage.lstImage
              )
         }
     }
