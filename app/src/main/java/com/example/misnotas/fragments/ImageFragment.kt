@@ -164,7 +164,7 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
             imageItemBinding.imageViewFotoMiniatura.setImageURI(
                 photoURI
             )
-
+            dataChanged()
         }
 
     }

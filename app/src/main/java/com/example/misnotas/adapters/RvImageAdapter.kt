@@ -3,6 +3,8 @@ package com.example.misnotas.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.misnotas.R
@@ -18,6 +20,7 @@ class RvImageAdapter: ListAdapter<Multimedia, RvImageAdapter.ImageViewHolder>(Di
         private val contenBinding= ImageItemLayoutBinding.bind(itemView)
         val delete: FloatingActionButton =contenBinding.fabDeleteImage
         val parent: MaterialCardView =contenBinding.imageItemLayoutParent
+        val image: ImageView = contenBinding.imageViewFotoMiniatura
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -31,6 +34,7 @@ class RvImageAdapter: ListAdapter<Multimedia, RvImageAdapter.ImageViewHolder>(Di
         getItem(position).let { multimedia ->
             holder.apply {
                 parent.transitionName="recyclerView_${multimedia.id}"
+                image.setImageURI(multimedia.path.toUri())
 
                 delete.setOnClickListener {
                     DataSourceImage.lstImage.remove(multimedia)
