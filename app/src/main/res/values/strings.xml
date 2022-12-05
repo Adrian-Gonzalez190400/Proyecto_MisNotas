@@ -4,8 +4,8 @@
     <string name="search_here">Search here...</string>
     <string name="clear">clear</string>
     <string name="no_data">no_data</string>
-    <string name="add_note">Add Note</string>
-    <string name="choose_color">Choose Color</string>
+    <string name="add_note">Add note</string>
+    <string name="choose_color">Choose color</string>
     <string name="some_text">Lorem Ipsum is simply dummy text of
         the printing and typesetting industry. Lorem Ipsum has been
         the industry\'s standard dummy text ever since the 1500s,
@@ -20,10 +20,10 @@
     <string name="add_reminder">Add reminder</string>
     <string name="note">Note</string>
     <string name="expiration_date">Expiration date</string>
-    <string name="my_notes">My Notes</string>
-    <string name="note_title">Note Title</string>
+    <string name="my_notes">My notes</string>
+    <string name="note_title">Note title</string>
     <string name="task">Task</string>
-    <string name="empty">Something is Empty</string>
+    <string name="empty">Something is empty</string>
     <string name="note_saved">Note saved</string>
     <string name="note_deleted">Note deleted</string>
     <string name="edit">Edit</string>
@@ -33,6 +33,6 @@
     <string name="undo">UNDO</string>
     <string name="add_picture">Add picture</string>
     <string name="pictures">PICTURES</string>
-    <string name="add_image">add image</string>
+    <string name="add_image">Add image</string>
     <string name="images">Images</string>
 </resources>
