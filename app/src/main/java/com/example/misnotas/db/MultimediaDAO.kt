@@ -13,6 +13,12 @@ interface MultimediaDAO {
     @Query("DELETE FROM Multimedia WHERE noteId = :id")
     fun deleteAllMultimedia(id: Int)
 
+    @Query("SELECT * FROM Multimedia WHERE noteId = :id and type=1 ORDER BY date DESC")
+    fun getAllImage(id: Int): MutableList<Multimedia>
+
+    @Query("SELECT * FROM Multimedia WHERE noteId = :id and type=2 ORDER BY date DESC")
+    fun getAllVideo(id: Int): MutableList<Multimedia>
+
     @Query("SELECT * FROM Multimedia WHERE noteId = :id ORDER BY date DESC")
     fun getAllMultimedia(id: Int): MutableList<Multimedia>
 }

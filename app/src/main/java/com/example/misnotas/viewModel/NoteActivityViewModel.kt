@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class NoteActivityViewModel(private val noteRepository: NoteRepository,
                             private val reminderRepository: ReminderRepository,
-                            private val multimediaRepository: MultimediaRepository): ViewModel() {
+                            private val multimediaRepository: MultimediaRepository,): ViewModel() {
     fun saveNote(newNote: Note)= viewModelScope.launch(Dispatchers.IO) {
         noteRepository.addNote(newNote)
     }

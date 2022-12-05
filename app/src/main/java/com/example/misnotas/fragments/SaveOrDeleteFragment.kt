@@ -4,13 +4,12 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.ContactsContract.Data
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
@@ -20,6 +19,7 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.databinding.BottomSheetLayoutBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
+import com.example.misnotas.model.Multimedia
 import com.example.misnotas.model.Note
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
@@ -65,10 +65,12 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
         DataSourceReminder.lstReminder.clear()
         DataSourceImage.lstImage.clear()
+        DataSourceVideo.lstVideo.clear()
 
         if(note!=null){
             DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
-            DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllMultimedia(note.id))
+            DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllImage(note.id))
+            DataSourceVideo.lstVideo.addAll(multimediaActivityViewModel.getAllVideo(note.id))
         }
     }
 
@@ -221,6 +223,13 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
             when(note){
                 null->{
+                    val lstMultimedia : MutableList<Multimedia> = mutableListOf()
+                    DataSourceImage.lstImage.forEach {
+                        lstMultimedia.add(it)
+                    }
+                    DataSourceVideo.lstVideo.forEach {
+                        lstMultimedia.add(it)
+                    }
                     noteActivityViewModel.saveNote(
                         Note(
                             0,
@@ -230,7 +239,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             currentDate,
                             expirationDate,
                             color
-                        ), DataSourceReminder.lstReminder,DataSourceImage.lstImage
+                        ), DataSourceReminder.lstReminder,lstMultimedia
                     )
 
                     result=getString(R.string.note_saved)
@@ -253,6 +262,13 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
     private fun updateNote() {
         if(note!=null){
+            val lstMultimedia : MutableList<Multimedia> = mutableListOf()
+            DataSourceImage.lstImage.forEach {
+                lstMultimedia.add(it)
+            }
+            DataSourceVideo.lstVideo.forEach {
+                lstMultimedia.add(it)
+            }
              noteActivityViewModel.updateNote(
                  Note(
                      note!!.id,
@@ -262,9 +278,13 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      currentDate,
                      expirationDate,
                      color
-                 ), DataSourceReminder.lstReminder,DataSourceImage.lstImage
+                 ), DataSourceReminder.lstReminder, lstMultimedia
              )
         }
+    }
+
+    private fun <T> concatenate(vararg lists: MutableList<T>): List<T> {
+        return mutableListOf(*lists).flatten()
     }
 
     private fun taskItemsVisibility(){

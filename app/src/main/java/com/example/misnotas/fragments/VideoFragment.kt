@@ -1,5 +1,6 @@
 package com.example.misnotas.fragments
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -8,7 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.MediaController
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.misnotas.BuildConfig
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
-import com.example.misnotas.adapters.RvImageAdapter
-import com.example.misnotas.databinding.FragmentImageBinding
-import com.example.misnotas.databinding.ImageItemLayoutBinding
+import com.example.misnotas.adapters.RvVideoAdapter
+import com.example.misnotas.databinding.FragmentVideoBinding
+import com.example.misnotas.databinding.VideoItemLayoutBinding
 import com.example.misnotas.model.Multimedia
 import com.example.misnotas.utils.hideKeyboard
 import com.google.android.material.transition.MaterialElevationScale
@@ -33,16 +34,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ImageFragment: Fragment(R.layout.fragment_image) {
-    private lateinit var imageBinding: FragmentImageBinding
-    private lateinit var imageItemBinding: ImageItemLayoutBinding
-    private lateinit var rvAdapter: RvImageAdapter
+class VideoFragment:Fragment(R.layout.fragment_video) {
+    private lateinit var videoBinding: FragmentVideoBinding
+    private lateinit var videoItemBinding: VideoItemLayoutBinding
+    private lateinit var rvAdapter: RvVideoAdapter
     private val myCalendar = Calendar.getInstance()
-    lateinit var photoURI: Uri
-    private val REQUEST_IMAGE_CAPTURE: Int = 1000
+    private val REQUEST_VIDEO_CAPTURE: Int = 1
+    lateinit var mediaController: MediaController
+    lateinit var videoURI: Uri
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        val activity=activity as MainActivity
+
+
 
         exitTransition= MaterialElevationScale(false).apply {
             duration=350
@@ -52,13 +57,13 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        imageBinding= FragmentImageBinding.bind(view)
-        imageItemBinding= ImageItemLayoutBinding.inflate(layoutInflater)
-
-
         val activity=activity as MainActivity
+        videoBinding= FragmentVideoBinding.bind(view)
+        videoItemBinding = VideoItemLayoutBinding.inflate(layoutInflater)
+
         requireView().hideKeyboard()
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -71,12 +76,13 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
 
 
 
-        imageBinding.fabAddImage.setOnClickListener {
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                takePictureIntent.resolveActivity(activity.packageManager)?.also {
+        videoBinding.fabAddVideo.setOnClickListener {
+
+            Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
+                takeVideoIntent.resolveActivity(activity.packageManager)?.also {
 
                     // Create the File where the photo should go
-                    val photoFile: File? = try {
+                    val videoFile: File? = try {
                         createImageFile()
                     } catch (ex: IOException) {
                         // Error occurred while creating the File
@@ -84,72 +90,73 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
                     }
 
                     // Continue only if the File was successfully created
-                    photoFile?.also {
-                        photoURI = FileProvider.getUriForFile(
+                    videoFile?.also {
+                        videoURI = FileProvider.getUriForFile(
                             Objects.requireNonNull(activity.applicationContext),
                             BuildConfig.APPLICATION_ID+".provider",it
                         )
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI)
+                        startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+
                     }
+
                 }
 
             }
-            addImage(
+            addVideo(
                 Multimedia(
-                    0, 0,1,currentPhotoPath,SimpleDateFormat.getInstance().format(myCalendar.time)
+                    0, 0,2,currentVideoPath, SimpleDateFormat.getInstance().format(myCalendar.time)
                 )
             )
         }
-
-
 
         recyclerViewDisplay()
 
         dataChanged()
 
-        imageBinding.rvImages.setOnScrollChangeListener{_,scrollX,scrollY,_,oldScrollY ->
+        videoBinding.rvVideos.setOnScrollChangeListener{_,scrollX,scrollY,_,oldScrollY ->
             when{
                 scrollY > oldScrollY -> {
-                    imageBinding.fabTextImage.isVisible=false
+                    videoBinding.fabTextVideo.isVisible=false
                 }
                 scrollX==scrollY -> {
-                    imageBinding.fabTextImage.isVisible=true
+                    videoBinding.fabTextVideo.isVisible=true
                 }
                 else -> {
-                    imageBinding.fabTextImage.isVisible=true
+                    videoBinding.fabTextVideo.isVisible=true
                 }
             }
         }
     }
 
-    lateinit var currentPhotoPath: String
+
+    lateinit var currentVideoPath: String
     @Throws(IOException::class)
     fun createImageFile(): File{
         // Create an image file name
 
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-       // val storageDir: File? = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        // val storageDir: File? = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val storageDir: File? = activity?.filesDir
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
+            "MP4_${timeStamp}_", /* prefix */
+            ".mp4", /* suffix */
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
+            currentVideoPath = absolutePath
         }
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
 
-            //Carga la imagen a partir de URI
-            imageItemBinding.imageViewFotoMiniatura.setImageURI(
-                photoURI
-            )
+            //Carga el video a partir de URI
+            videoItemBinding.videoViewItem.setVideoPath(videoURI.path)
+          //  videoItemBinding.videoViewItem.start()
+
             dataChanged()
         }
 
@@ -158,12 +165,12 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
 
 
     private fun dataChanged(){
-        rvAdapter.submitList(DataSourceImage.lstImage)
-        imageBinding.rvImages.adapter?.notifyDataSetChanged()
+        rvAdapter.submitList(DataSourceVideo.lstVideo)
+        videoBinding.rvVideos.adapter?.notifyDataSetChanged()
     }
 
-    private fun addImage(img: Multimedia){
-        DataSourceImage.lstImage.add(img)
+    private fun addVideo(video: Multimedia){
+        DataSourceVideo.lstVideo.add(video)
         dataChanged()
     }
 
@@ -176,10 +183,10 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
 
     /*Usaremos adaptador de lista  -> Actualiza en automatico el contenido despues de hacer un cambio */
     private fun setUpRecyclerView(spanCount: Int) {
-        imageBinding.rvImages.apply {
+        videoBinding.rvVideos.apply {
             layoutManager= LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
             setHasFixedSize(true)
-            rvAdapter= RvImageAdapter(/*DataSourceImage.lstImage*/)
+            rvAdapter= RvVideoAdapter(/*DataSourceVideo.lstVideo*/)
             rvAdapter.stateRestorationPolicy=
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter=rvAdapter
@@ -190,4 +197,20 @@ class ImageFragment: Fragment(R.layout.fragment_image) {
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -35,4 +35,6 @@
     <string name="pictures">PICTURES</string>
     <string name="add_image">add image</string>
     <string name="images">Images</string>
+    <string name="videos">Videos</string>
+    <string name="add_video">add video</string>
 </resources>
