@@ -160,7 +160,7 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
 
                     override fun onShown(transientBottomBar: Snackbar?) {
                         transientBottomBar?.setAction("UNDO"){
-                            noteActivityViewModel.saveNote(note, reminders,multimedia)
+                            noteActivityViewModel.saveNote(note, reminders, multimedia)
                             actionBtnTapped=true
                             noteBinding.noData.isVisible=false
                         }

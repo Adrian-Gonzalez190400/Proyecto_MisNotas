@@ -16,10 +16,6 @@ import kotlinx.coroutines.launch
 class NoteActivityViewModel(private val noteRepository: NoteRepository,
                             private val reminderRepository: ReminderRepository,
                             private val multimediaRepository: MultimediaRepository): ViewModel() {
-    fun saveNote(newNote: Note)= viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.addNote(newNote)
-    }
-
     fun saveNote(newNote: Note, lstReminder: List<Reminder>, lstMultimedia: List<Multimedia>) = viewModelScope.launch(Dispatchers.IO) {
         val noteId = noteRepository.addNote(newNote)
         lstReminder.forEach {reminder ->  reminder.noteId = noteId.toInt()}
@@ -28,10 +24,6 @@ class NoteActivityViewModel(private val noteRepository: NoteRepository,
         lstMultimedia.forEach{multimedia -> multimedia.noteId=noteId.toInt() }
         multimediaRepository.addMultimedia(lstMultimedia)
 
-    }
-
-    fun updateNote(existingNote: Note)= viewModelScope.launch(Dispatchers.IO) {
-        noteRepository.updateNote(existingNote)
     }
 
     fun updateNote(existingNote: Note, lstReminder: List<Reminder>, lstMultimedia: List<Multimedia>)= viewModelScope.launch(Dispatchers.IO) {

@@ -166,18 +166,17 @@
                             android:textColor="@color/white"></TextView>
                     </LinearLayout>
                     <androidx.fragment.app.FragmentContainerView
-                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/fragmentImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:name="com.example.misnotas.fragments.ImageFragment"/>
+                    <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/fragmentReminder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:name="com.example.misnotas.fragments.ReminderFragment"
                         android:visibility="gone"/>
-                    <androidx.fragment.app.FragmentContainerView
-                        android:id="@+id/fragmentImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:name="com.example.misnotas.fragments.ImageFragment"
-                        android:visibility="visible"/>
+
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
