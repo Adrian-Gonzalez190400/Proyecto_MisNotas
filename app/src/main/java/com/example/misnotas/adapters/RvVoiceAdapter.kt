@@ -1,5 +1,6 @@
 package com.example.misnotas.adapters
 
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.example.misnotas.fragments.DataSourceVoice
 import com.example.misnotas.model.Multimedia
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.IOException
 
 class RvVoiceAdapter: ListAdapter<Multimedia, RvVoiceAdapter.VoiceViewHolder>(DiffUtilCallbackVoice()) {
     inner class VoiceViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView){
@@ -36,7 +38,40 @@ class RvVoiceAdapter: ListAdapter<Multimedia, RvVoiceAdapter.VoiceViewHolder>(Di
         getItem(position).let { multimedia ->
             holder.apply {
                 parent.transitionName="recyclerView_${multimedia.id}"
+                var mStartRecording: Boolean = true
+                 var player: MediaPlayer? = null
                 //image.setImageURI(multimedia.path.toUri())
+
+                fun stopPlaying() {
+
+                    player?.release()
+                    player = null
+                }
+
+                fun startPlaying() {
+                    player = MediaPlayer().apply {
+                        try {
+                            setDataSource(multimedia.path)
+                            prepare()
+                            start()
+                        } catch (e: IOException) {}
+                    }
+                }
+                fun onPlay(start: Boolean) =
+                    if (start) {
+                        startPlaying()
+                } else {
+                    stopPlaying()
+                }
+
+                record.setOnClickListener {
+                    onPlay(mStartRecording)
+                    record.text=when(mStartRecording){
+                        true -> "Stop"
+                        false -> "Play"
+                    }
+                    mStartRecording=!mStartRecording
+                }
 
                 delete.setOnClickListener {
                     DataSourceVoice.lstVoice.remove(multimedia)
@@ -46,6 +81,7 @@ class RvVoiceAdapter: ListAdapter<Multimedia, RvVoiceAdapter.VoiceViewHolder>(Di
             }
 
         }
+
     }
 
 

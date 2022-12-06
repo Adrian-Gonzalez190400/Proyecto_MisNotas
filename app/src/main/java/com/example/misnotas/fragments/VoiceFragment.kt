@@ -5,18 +5,17 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.adapters.RvVoiceAdapter
@@ -24,33 +23,43 @@ import com.example.misnotas.databinding.FragmentVoiceBinding
 import com.example.misnotas.databinding.VoiceItemLayoutBinding
 import com.example.misnotas.model.Multimedia
 import com.example.misnotas.utils.hideKeyboard
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialElevationScale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 private const val LOG_TAG = "AudioRecordTest"
+const val REQUEST_CODE = 200
+
 class VoiceFragment: Fragment(R.layout.fragment_voice) {
     private lateinit var voiceBinding: FragmentVoiceBinding
     private lateinit var voiceItemBinding: VoiceItemLayoutBinding
     lateinit var requestPermissionLauncher : ActivityResultLauncher<String>
     private lateinit var rvAdapter: RvVoiceAdapter
     private var mStartRecording: Boolean = true
-    private var fileName: String = ""
-    private var recorder: MediaRecorder? = null
+    private lateinit var recorder: MediaRecorder
+    private var dirPath = ""
+    private var filename = ""
     private var player: MediaPlayer? = null
     private val myCalendar = Calendar.getInstance()
-
+    private var permissions = arrayOf(android.Manifest.permission.RECORD_AUDIO)
+    private var permissionGranted = false
+    private var isRecording = false
+    private var isPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
+        val activity = activity as MainActivity
+        permissionGranted=ActivityCompat.checkSelfPermission(activity.applicationContext,permissions[0])==PackageManager.PERMISSION_GRANTED
+
+        //Si los permisos no fuereon otorgados, se los damos xd
+        if (permissionGranted)
+            ActivityCompat.requestPermissions(activity,permissions, REQUEST_CODE)
 
         exitTransition= MaterialElevationScale(false).apply {
             duration=350
@@ -60,12 +69,13 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         voiceBinding = FragmentVoiceBinding.bind(view)
         voiceItemBinding = VoiceItemLayoutBinding.inflate(layoutInflater)
 
-        iniPerm()
+      //  iniPerm()
         val activity = activity as MainActivity
         requireView().hideKeyboard()
 
@@ -78,25 +88,27 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
         }
 
         voiceBinding.fabTextVoiceRecord.setOnClickListener {
-            grabar()
-            onRecord(mStartRecording)
-            voiceBinding.fabTextVoiceRecord.text=when(mStartRecording){
-                true -> "Stop recording"
-                false -> "Start recording"
+            when{
+                //isPaused -> resumeRecorder()
+                isRecording -> stopRecorder()
+                else -> startRecording()
             }
-            mStartRecording=!mStartRecording
-            addVoice(
-                Multimedia(
-                    0, 0,3,fileName,SimpleDateFormat.getInstance().format(myCalendar.time)
+            if(isPaused) {
+                addVoice(
+                    Multimedia(
+                        0, 0, 3, "$dirPath$filename.mp3", SimpleDateFormat.getInstance().format(myCalendar.time)
+                    )
                 )
-            )
+            }
+
         }
-        iniUI()
+
+
         recyclerViewDisplay()
 
         dataChanged()
 
-        voiceItemBinding.btnPlayRecordVoice.setOnClickListener {
+        /*voiceItemBinding.btnPlayRecordVoice.setOnClickListener {
             onPlay(mStartRecording)
             voiceItemBinding.btnPlayRecordVoice.text=when(mStartRecording){
                 true -> "Stop playing"
@@ -104,7 +116,7 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
             }
             mStartRecording = !mStartRecording
             dataChanged()
-        }
+        }*/
 
         voiceBinding.rvRecordings.setOnScrollChangeListener{_,scrollX,scrollY,_,oldScrollY ->
             when{
@@ -122,7 +134,62 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
 
     }
 
-    private fun iniPerm(){
+    /******************* INICIA VIDEO********************************/
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode== REQUEST_CODE)
+            permissionGranted=grantResults[0]==PackageManager.PERMISSION_GRANTED
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun stopRecorder(){
+        recorder.release()
+        isPaused=true
+        voiceBinding.fabTextVoiceRecord.text="Add Record"
+    }
+
+  /*  @RequiresApi(Build.VERSION_CODES.N)
+    private fun resumeRecorder(){
+        recorder.release()
+        isPaused=false
+        voiceBinding.fabTextVoiceRecord.text="Stop Recording"
+
+    }*/
+
+    private fun startRecording(){
+        val activity = activity as MainActivity
+        if(!permissionGranted){
+            ActivityCompat.requestPermissions(activity,permissions, REQUEST_CODE)
+            return
+        }
+        //start recording
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        recorder=MediaRecorder()
+        dirPath="${activity.externalCacheDir?.absolutePath}/"
+        filename = "audio_record_${timeStamp}"
+        recorder.apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setOutputFile("$dirPath$filename.mp3")
+            try {
+                prepare()
+            }catch (e: IOException){}
+            start()
+        }
+        voiceBinding.fabTextVoiceRecord.text="Stop Recording"
+        isRecording=true
+        isPaused=false
+    }
+
+    /******************* FIN VIDEO********************************/
+
+   /* private fun iniPerm(){
         requestPermissionLauncher =
             registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
@@ -256,39 +323,6 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
         voiceBinding.fabTextVoiceRecord.text = "Start recording"
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            1001 -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                            grantResults[1] == PackageManager.PERMISSION_GRANTED
-                            )) {
-                    // Permission is granted. Continue the action or workflow
-                    // in your app.
-                    iniciarGraabacion()
-                } else {
-                    // Explain to the user that the feature is unavailable because
-                    // the features requires a permission that the user has denied.
-                    // At the same time, respect the user's decision. Don't link to
-                    // system settings in an effort to convince the user to change
-                    // their decision.
-                }
-                return
-            }
-
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
-            }
-        }
-    }
 
     @Throws(IOException::class)
     fun createAudioFile(): File {
@@ -307,7 +341,7 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
 
         }
     }
-
+*/
     private fun dataChanged(){
         rvAdapter.submitList(DataSourceVoice.lstVoice)
         voiceBinding.rvRecordings.adapter?.notifyDataSetChanged()
@@ -328,7 +362,7 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
     /*Usaremos adaptador de lista  -> Actualiza en automatico el contenido despues de hacer un cambio */
     private fun setUpRecyclerView(spanCount: Int) {
         voiceBinding.rvRecordings.apply {
-            layoutManager= LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager= StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
             rvAdapter= RvVoiceAdapter(/*DataSourceImage.lstImage*/)
             rvAdapter.stateRestorationPolicy=

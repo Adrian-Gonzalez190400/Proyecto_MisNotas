@@ -13,8 +13,8 @@ import android.widget.MediaController
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.misnotas.BuildConfig
 import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
@@ -184,7 +184,7 @@ class VideoFragment:Fragment(R.layout.fragment_video) {
     /*Usaremos adaptador de lista  -> Actualiza en automatico el contenido despues de hacer un cambio */
     private fun setUpRecyclerView(spanCount: Int) {
         videoBinding.rvVideos.apply {
-            layoutManager= LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager= StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
             rvAdapter= RvVideoAdapter(/*DataSourceVideo.lstVideo*/)
             rvAdapter.stateRestorationPolicy=
