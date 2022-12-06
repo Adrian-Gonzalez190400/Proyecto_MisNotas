@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:id="@+id/imageItemLayoutParent"
+            android:id="@+id/videoItemLayoutParent"
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackground"
@@ -29,21 +29,22 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp">
 
-                <ImageView
-                    android:id="@+id/imageViewFotoMiniatura"
+                <VideoView
+                    android:id="@+id/videoViewItem"
                     android:layout_width="228dp"
-                    android:layout_height="225dp"
+                    android:layout_height="250dp"
                     android:layout_marginStart="1dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fabDeleteImage"
+                    android:id="@+id/fabDeleteVideo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="230dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="255dp"
                     android:src="@android:drawable/ic_menu_delete"
-                    app:backgroundTint="@color/red"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+                    app:backgroundTint="@color/red">
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>

@@ -36,4 +36,9 @@
     <string name="add_image">Agregar imagen</string>
     <string name="images">Imágenes</string>
     <string name="title_notification">No olvides tu tarea</string>
+    <string name="videos">Videos</string>
+    <string name="add_video">Agregar video</string>
+    <string name="play">Reproducir</string>
+    <string name="recordings">Grabaciones</string>
+    <string name="add_record">Agregar grabación</string>
 </resources>

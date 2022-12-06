@@ -48,9 +48,9 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
 
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
+    private lateinit var rvAdapter: RvTasksAdapter
     private  val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
     private val multimediaActivityViewModel: MultimediaActivityViewModel by activityViewModels()
-    private lateinit var rvAdapter: RvTasksAdapter
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)

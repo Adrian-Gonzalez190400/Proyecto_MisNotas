@@ -5,13 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
@@ -21,6 +20,7 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.databinding.BottomSheetLayoutBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
+import com.example.misnotas.model.Multimedia
 import com.example.misnotas.model.Note
 import com.example.misnotas.model.Reminder
 import com.example.misnotas.notifications.NotificationReceiver
@@ -69,10 +69,14 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
         DataSourceReminder.lstReminder.clear()
         DataSourceImage.lstImage.clear()
+        DataSourceVideo.lstVideo.clear()
+        DataSourceVoice.lstVoice.clear()
 
         if(note!=null){
             DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
-            DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllMultimedia(note.id))
+            DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllImage(note.id))
+            DataSourceVideo.lstVideo.addAll(multimediaActivityViewModel.getAllVideo(note.id))
+            DataSourceVoice.lstVoice.addAll(multimediaActivityViewModel.getAllVoice(note.id))
         }
     }
 
@@ -233,6 +237,17 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
                     scheduleNotifications(contentBinding.etTitle.text.toString())
 
+                    val lstMultimedia : MutableList<Multimedia> = mutableListOf()
+                    DataSourceImage.lstImage.forEach {
+                        lstMultimedia.add(it)
+                    }
+                    DataSourceVideo.lstVideo.forEach {
+                        lstMultimedia.add(it)
+                    }
+                    DataSourceVoice.lstVoice.forEach {
+                        lstMultimedia.add(it)
+                    }
+
                     noteActivityViewModel.saveNote(
                         Note(
                             0,
@@ -242,7 +257,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                             currentDate,
                             expirationDate,
                             color
-                        ), DataSourceReminder.lstReminder,DataSourceImage.lstImage
+                        ), DataSourceReminder.lstReminder,lstMultimedia
                     )
 
                     result=getString(R.string.note_saved)
@@ -276,6 +291,17 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
             scheduleNotifications(contentBinding.etTitle.text.toString())
 
+            val lstMultimedia : MutableList<Multimedia> = mutableListOf()
+            DataSourceImage.lstImage.forEach {
+                lstMultimedia.add(it)
+            }
+            DataSourceVideo.lstVideo.forEach {
+                lstMultimedia.add(it)
+            }
+            DataSourceVoice.lstVoice.forEach {
+                lstMultimedia.add(it)
+            }
+
              noteActivityViewModel.updateNote(
                  Note(
                      note!!.id,
@@ -285,9 +311,13 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                      currentDate,
                      expirationDate,
                      color
-                 ), DataSourceReminder.lstReminder, DataSourceImage.lstImage
+                 ), DataSourceReminder.lstReminder, lstMultimedia
              )
         }
+    }
+
+    private fun <T> concatenate(vararg lists: MutableList<T>): List<T> {
+        return mutableListOf(*lists).flatten()
     }
 
     private fun taskItemsVisibility(){

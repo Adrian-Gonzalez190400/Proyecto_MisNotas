@@ -54,7 +54,7 @@
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.example.misnotas.fragments.TaskFragment"
-        android:label="@string/tasks"
+        android:label="Tareas"
         tools:layout="@layout/fragment_nota">
         <action
             android:id="@+id/action_taskFragment_to_saveOrDeleteFragment"

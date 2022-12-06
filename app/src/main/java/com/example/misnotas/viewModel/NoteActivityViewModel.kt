@@ -3,7 +3,6 @@ package com.example.misnotas.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.misnotas.fragments.DataSourceReminder
 import com.example.misnotas.model.Multimedia
 import com.example.misnotas.model.Note
 import com.example.misnotas.model.Reminder
@@ -15,16 +14,18 @@ import kotlinx.coroutines.launch
 
 class NoteActivityViewModel(private val noteRepository: NoteRepository,
                             private val reminderRepository: ReminderRepository,
-                            private val multimediaRepository: MultimediaRepository): ViewModel() {
+                            private val multimediaRepository: MultimediaRepository,): ViewModel() {
+
+
     fun saveNote(newNote: Note, lstReminder: List<Reminder>, lstMultimedia: List<Multimedia>) = viewModelScope.launch(Dispatchers.IO) {
         val noteId = noteRepository.addNote(newNote)
         lstReminder.forEach {reminder ->  reminder.noteId = noteId.toInt()}
         reminderRepository.addReminder(lstReminder)
-
         lstMultimedia.forEach{multimedia -> multimedia.noteId=noteId.toInt() }
         multimediaRepository.addMultimedia(lstMultimedia)
 
     }
+
 
     fun updateNote(existingNote: Note, lstReminder: List<Reminder>, lstMultimedia: List<Multimedia>)= viewModelScope.launch(Dispatchers.IO) {
         noteRepository.updateNote(existingNote)
