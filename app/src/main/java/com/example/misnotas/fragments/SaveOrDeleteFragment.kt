@@ -66,11 +66,13 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         DataSourceReminder.lstReminder.clear()
         DataSourceImage.lstImage.clear()
         DataSourceVideo.lstVideo.clear()
+        DataSourceVoice.lstVoice.clear()
 
         if(note!=null){
             DataSourceReminder.lstReminder.addAll(reminderActivityViewModel.getAllReminder(note.id))
             DataSourceImage.lstImage.addAll(multimediaActivityViewModel.getAllImage(note.id))
             DataSourceVideo.lstVideo.addAll(multimediaActivityViewModel.getAllVideo(note.id))
+            DataSourceVoice.lstVoice.addAll(multimediaActivityViewModel.getAllVoice(note.id))
         }
     }
 
@@ -230,6 +232,9 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                     DataSourceVideo.lstVideo.forEach {
                         lstMultimedia.add(it)
                     }
+                    DataSourceVoice.lstVoice.forEach {
+                        lstMultimedia.add(it)
+                    }
                     noteActivityViewModel.saveNote(
                         Note(
                             0,
@@ -267,6 +272,9 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                 lstMultimedia.add(it)
             }
             DataSourceVideo.lstVideo.forEach {
+                lstMultimedia.add(it)
+            }
+            DataSourceVoice.lstVoice.forEach {
                 lstMultimedia.add(it)
             }
              noteActivityViewModel.updateNote(

@@ -178,6 +178,12 @@
                         android:name="com.example.misnotas.fragments.VideoFragment"
                         android:visibility="visible"/>
                     <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/fragmentVoice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:name="com.example.misnotas.fragments.VoiceFragment"
+                        android:visibility="visible"/>
+                    <androidx.fragment.app.FragmentContainerView
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/fragmentReminder"
                         android:layout_width="match_parent"

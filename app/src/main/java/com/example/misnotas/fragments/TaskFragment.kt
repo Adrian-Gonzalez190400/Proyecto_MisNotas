@@ -5,12 +5,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,7 +22,9 @@ import com.example.misnotas.adapters.RvTasksAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
+import com.example.misnotas.viewModel.MultimediaActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModel
+import com.example.misnotas.viewModel.ReminderActivityViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
@@ -37,6 +39,8 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
     private lateinit var noteBinding: FragmentNotaBinding
     private  val noteActivityViewModel: NoteActivityViewModel by activityViewModels()
     private lateinit var rvAdapter: RvTasksAdapter
+    private  val reminderActivityViewModel: ReminderActivityViewModel by activityViewModels()
+    private val multimediaActivityViewModel: MultimediaActivityViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -135,6 +139,8 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position=viewHolder.absoluteAdapterPosition
                 val note=rvAdapter.currentList[position]
+                val reminders=reminderActivityViewModel.getAllReminder(note.id)
+                val multimedia=multimediaActivityViewModel.getAllMultimedia(note.id)
                 var actionBtnTapped=false
                 noteActivityViewModel.deleteNote(note)
                 noteBinding.search.apply {
@@ -145,7 +151,7 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
                     observerDataChanges()
                 }
                 val snackBar=Snackbar.make(
-                    requireView(),"Note Deleted", Snackbar.LENGTH_LONG
+                    requireView(),getString(R.string.note_deleted), Snackbar.LENGTH_LONG
                 ).addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>(){
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                         super.onDismissed(transientBottomBar, event)
@@ -153,7 +159,7 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
 
                     override fun onShown(transientBottomBar: Snackbar?) {
                         transientBottomBar?.setAction("UNDO"){
-                            noteActivityViewModel.saveNote(note)
+                            noteActivityViewModel.saveNote(note, reminders, multimedia)
                             actionBtnTapped=true
                             noteBinding.noData.isVisible=false
                         }

@@ -37,4 +37,7 @@
     <string name="images">Images</string>
     <string name="videos">Videos</string>
     <string name="add_video">add video</string>
+    <string name="play">Play</string>
+    <string name="recordings">Recordings</string>
+    <string name="add_record">Add Record</string>
 </resources>

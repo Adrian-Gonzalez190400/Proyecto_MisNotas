@@ -8,4 +8,5 @@ class MultimediaActivityViewModel(private val repository: MultimediaRepository):
     fun getAllMultimedia(id: Int): MutableList<Multimedia> = repository.getMultimedia(id)
     fun getAllImage(id: Int) : MutableList<Multimedia> = repository.getAllImage(id)
     fun getAllVideo(id: Int) : MutableList<Multimedia> = repository.getAllVideo(id)
+    fun getAllVoice(id: Int) : MutableList<Multimedia> = repository.getAllVoice(id)
 }

@@ -14,6 +14,7 @@ import com.example.misnotas.model.Multimedia
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+
 class RvVideoAdapter: ListAdapter<Multimedia,RvVideoAdapter.VideoViewHolder>(DiffUtilCallbackVideo()) {
     inner class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val contenBinding = VideoItemLayoutBinding.bind(itemView)
