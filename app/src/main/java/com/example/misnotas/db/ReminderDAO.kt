@@ -14,4 +14,7 @@ interface ReminderDAO {
 
     @Query("SELECT * FROM Reminder WHERE noteId = :id ORDER BY date DESC")
     fun getAllReminder(id: Int): MutableList<Reminder>
+
+    @Query("SELECT MAX(notificationId) FROM Reminder")
+    fun getMaxNotificationId(): Int
 }

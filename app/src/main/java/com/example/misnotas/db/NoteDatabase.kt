@@ -10,7 +10,7 @@ import com.example.misnotas.model.Reminder
 
 @Database(
     entities = [Note::class, Reminder::class, Multimedia::class],
-    version = 1
+    version = 2
 )
 
 abstract class NoteDatabase: RoomDatabase() {

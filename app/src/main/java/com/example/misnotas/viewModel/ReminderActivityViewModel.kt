@@ -10,4 +10,5 @@ import kotlinx.coroutines.launch
 
 class ReminderActivityViewModel(private val repository: ReminderRepository): ViewModel()  {
     fun getAllReminder(id: Int): MutableList<Reminder> = repository.getReminder(id)
+    fun getMaxNotificationId(): Int = repository.getMaxNotificationId()
 }

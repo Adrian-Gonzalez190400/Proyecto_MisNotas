@@ -1,5 +1,9 @@
 package com.example.misnotas.fragments
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -20,6 +24,8 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.adapters.RvSimpleNotesAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
+import com.example.misnotas.notifications.NotificationReceiver
+import com.example.misnotas.notifications.notificationID
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
@@ -216,5 +222,4 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
         observerDataChanges()
 
     }
-
 }

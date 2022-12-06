@@ -1,27 +1,20 @@
 package com.example.misnotas.activities
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
 import com.example.misnotas.R
 import com.example.misnotas.databinding.ActivityMainBinding
 import com.example.misnotas.db.NoteDatabase
-import com.example.misnotas.model.Reminder
 import com.example.misnotas.repository.MultimediaRepository
 import com.example.misnotas.repository.NoteRepository
 import com.example.misnotas.repository.ReminderRepository
 import com.example.misnotas.viewModel.*
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding=ActivityMainBinding.inflate(layoutInflater)
+        binding=ActivityMainBinding.inflate(layoutInflater)
 
         try {
             setContentView(binding.root)
@@ -78,19 +71,13 @@ class MainActivity : AppCompatActivity() {
         //DraweLayout
         binding.navView.setupWithNavController(navController)
 
-
     }
 
-   override fun onSupportNavigateUp(): Boolean {
-       return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
-
-
-
-
 }
