@@ -1,8 +1,11 @@
 package com.example.misnotas.activities
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -11,6 +14,7 @@ import androidx.navigation.ui.*
 import com.example.misnotas.R
 import com.example.misnotas.databinding.ActivityMainBinding
 import com.example.misnotas.db.NoteDatabase
+import com.example.misnotas.notifications.NotificationReceiver
 import com.example.misnotas.repository.MultimediaRepository
 import com.example.misnotas.repository.NoteRepository
 import com.example.misnotas.repository.ReminderRepository
@@ -40,6 +44,15 @@ class MainActivity : AppCompatActivity() {
             val noteActivityViewModelFactory=NoteActivityViewModelFactory(noteRepository, reminderRepository,multimediaRepository)
             val reminderActivityViewModelFactory=ReminderActivityViewModelFactory(reminderRepository)
             val multimediaActivityViewModelFactory=MultimediaActivityViewModelFactory(multimediaRepository)
+
+//            val receiver = ComponentName(applicationContext, NotificationReceiver::class.java)
+//
+//            applicationContext.packageManager.setComponentEnabledSetting(
+//                receiver,
+//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//                PackageManager.DONT_KILL_APP
+//            )
+
             noteActivityViewModel=ViewModelProvider(this,
                 noteActivityViewModelFactory)[NoteActivityViewModel::class.java]
 
@@ -70,7 +83,6 @@ class MainActivity : AppCompatActivity() {
 
         //DraweLayout
         binding.navView.setupWithNavController(navController)
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

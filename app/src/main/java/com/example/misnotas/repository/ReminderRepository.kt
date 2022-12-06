@@ -8,4 +8,5 @@ class ReminderRepository(private val db: NoteDatabase) {
     fun deleteAllReminder(id: Int)= db.getReminderDao().deleteAllReminder(id)
     fun getReminder(id: Int)= db.getReminderDao().getAllReminder(id)
     fun getMaxNotificationId()= db.getReminderDao().getMaxNotificationId()
+    fun getNoteId(id: Int)= db.getReminderDao().getNoteId(id)
 }

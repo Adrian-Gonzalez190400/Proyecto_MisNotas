@@ -24,7 +24,6 @@ import com.example.misnotas.model.Multimedia
 import com.example.misnotas.model.Note
 import com.example.misnotas.model.Reminder
 import com.example.misnotas.notifications.NotificationReceiver
-import com.example.misnotas.notifications.notificationID
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModel
@@ -336,11 +335,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -360,11 +359,11 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )

@@ -41,7 +41,12 @@
         </activity>
 
         <receiver android:name=".notifications.NotificationReceiver"
-            android:enabled="true"/>
+            android:enabled="true">
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED"></action>-->
+<!--            </intent-filter>-->
+        </receiver>
 
         <provider
             android:name=".fragments.MyFileProvider"

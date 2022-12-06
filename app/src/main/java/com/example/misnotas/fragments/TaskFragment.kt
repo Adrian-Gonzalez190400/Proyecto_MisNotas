@@ -28,7 +28,6 @@ import com.example.misnotas.adapters.RvTasksAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.model.Reminder
 import com.example.misnotas.notifications.NotificationReceiver
-import com.example.misnotas.notifications.notificationID
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
@@ -235,11 +234,11 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -259,11 +258,11 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )

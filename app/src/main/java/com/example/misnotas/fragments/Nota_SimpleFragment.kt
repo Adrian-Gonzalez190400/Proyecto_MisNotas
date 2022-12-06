@@ -24,8 +24,6 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.adapters.RvSimpleNotesAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
-import com.example.misnotas.notifications.NotificationReceiver
-import com.example.misnotas.notifications.notificationID
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel

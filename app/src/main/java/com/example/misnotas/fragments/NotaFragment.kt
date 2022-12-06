@@ -1,7 +1,6 @@
 package com.example.misnotas.fragments
 
 import android.app.AlarmManager
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -13,6 +12,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -27,7 +27,6 @@ import com.example.misnotas.adapters.RvNotesAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
 import com.example.misnotas.model.Reminder
 import com.example.misnotas.notifications.NotificationReceiver
-import com.example.misnotas.notifications.notificationID
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
@@ -138,11 +137,22 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
                 }
             }
         }
-
-
-
-
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val notificationId = activity?.intent?.getIntExtra("notificationId", 0)!!
+//        Toast.makeText(this.context, "ID = " + notificationId.toString(), Toast.LENGTH_SHORT).show()
+//        if(notificationId!=0){
+//            val noteId = reminderActivityViewModel.getNoteId(notificationId)
+//            /*val action=NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment()
+//                        .setNote(note)
+//                    val extras= FragmentNavigatorExtras(parent to "recyclerView_${note.id}")
+//                    it.hideKeyboard()
+//                    Navigation.findNavController(it).navigate(action,extras)*/
+//        }
+//        activity?.intent?.putExtra("notificationId", 0)
+//    }
 
     private fun swipteToDelete(rvNote: RecyclerView) {
         val swipeToDeleteCallback=object : SwipeToDelete(){
@@ -235,11 +245,11 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -259,11 +269,11 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
             val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
             intent.putExtra("titleExtra", title)
             intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
 
-            notificationID = reminder.notificationId
             val pendingIntent = PendingIntent.getBroadcast(
                 activity?.applicationContext,
-                notificationID,
+                reminder.notificationId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )

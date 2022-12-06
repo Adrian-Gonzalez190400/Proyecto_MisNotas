@@ -2,6 +2,7 @@ package com.example.misnotas.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.misnotas.model.Note
 import com.example.misnotas.model.Reminder
 
 @Dao
@@ -17,4 +18,7 @@ interface ReminderDAO {
 
     @Query("SELECT MAX(notificationId) FROM Reminder")
     fun getMaxNotificationId(): Int
+
+    @Query("SELECT noteId FROM Reminder WHERE notificationId = :id")
+    fun getNoteId(id: Int): Int //todo mutablelist ?
 }
