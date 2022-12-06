@@ -60,6 +60,7 @@ class RvReminderAdapter: ListAdapter<Reminder, RvReminderAdapter.ReminderViewHol
                     var editReminder = DataSourceReminder.lstReminder.get(position)
                     DataSourceReminder.lstReminder.remove(editReminder)
                     editReminder.date = newDate
+                    editReminder.time = myCalendar.timeInMillis
                     DataSourceReminder.lstReminder.add(editReminder)
                     submitList(DataSourceReminder.lstReminder)
                     notifyDataSetChanged()

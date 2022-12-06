@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">MisNotas</string>
+
+    <string name="search_here">Buscar aquí...</string>
+    <string name="clear">limpiar</string>
+    <string name="no_data">sin_datos</string>
+    <string name="add_note">Agregar nota</string>
+    <string name="choose_color">Elegir color</string>
+    <string name="some_text">Lorem Ipsum is simply dummy text of
+        the printing and typesetting industry. Lorem Ipsum has been
+        the industry\'s standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled
+        it to make a type specimen book. It has survived not only five
+        centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged.
+    </string>
+    <string name="edited_on">Editado el: %1$s</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reminders">Recordatorios</string>
+    <string name="add_reminder">Agregar recordatorio</string>
+    <string name="note">Nota</string>
+    <string name="expiration_date">Fecha de vencimiento</string>
+    <string name="my_notes">Mis notas</string>
+    <string name="note_title">Título de la nota</string>
+    <string name="task">Tarea</string>
+    <string name="empty">Algo está vacío</string>
+    <string name="note_saved">Nota guardada</string>
+    <string name="note_deleted">Nota eliminada</string>
+    <string name="edit">Editar</string>
+    <string name="all_notes">Todas las notas</string>
+    <string name="simple_notes">Notas simples</string>
+    <string name="tasks">Tareas</string>
+    <string name="undo">DESHACER</string>
+    <string name="add_picture">Agregar foto</string>
+    <string name="pictures">FOTOS</string>
+    <string name="add_image">Agregar imagen</string>
+    <string name="images">Imágenes</string>
+    <string name="title_notification">No olvides tu tarea</string>
+    <string name="videos">Videos</string>
+    <string name="add_video">Agregar video</string>
+    <string name="play">Reproducir</string>
+    <string name="recordings">Grabaciones</string>
+    <string name="add_record">Agregar grabación</string>
+</resources>

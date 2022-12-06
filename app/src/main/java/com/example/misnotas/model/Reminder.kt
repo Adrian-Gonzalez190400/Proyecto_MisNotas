@@ -9,5 +9,7 @@ data class Reminder(
     @PrimaryKey(autoGenerate = true)
     var id: Int=0,
     var noteId: Int,
-    var date: String
+    var notificationId: Int,
+    var date: String,
+    var time:  Long
 ): Serializable

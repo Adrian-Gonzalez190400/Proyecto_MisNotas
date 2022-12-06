@@ -1,7 +1,8 @@
 package com.example.misnotas.fragments
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,8 @@ import com.example.misnotas.databinding.BottomSheetLayoutBinding
 import com.example.misnotas.databinding.FragmentSaveOrDeleteBinding
 import com.example.misnotas.model.Multimedia
 import com.example.misnotas.model.Note
+import com.example.misnotas.model.Reminder
+import com.example.misnotas.notifications.NotificationReceiver
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
 import com.example.misnotas.viewModel.NoteActivityViewModel
@@ -225,6 +228,14 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
             when(note){
                 null->{
+                    var id = reminderActivityViewModel.getMaxNotificationId()
+                    DataSourceReminder.lstReminder.forEach{ reminder ->
+                        id++
+                        reminder.notificationId = id
+                    }
+
+                    scheduleNotifications(contentBinding.etTitle.text.toString())
+
                     val lstMultimedia : MutableList<Multimedia> = mutableListOf()
                     DataSourceImage.lstImage.forEach {
                         lstMultimedia.add(it)
@@ -235,6 +246,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
                     DataSourceVoice.lstVoice.forEach {
                         lstMultimedia.add(it)
                     }
+
                     noteActivityViewModel.saveNote(
                         Note(
                             0,
@@ -267,6 +279,17 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
 
     private fun updateNote() {
         if(note!=null){
+            val cancelReminders = reminderActivityViewModel.getAllReminder(note!!.id)
+            cancelAlarms(cancelReminders, note!!.title)
+
+            var id = reminderActivityViewModel.getMaxNotificationId()
+            DataSourceReminder.lstReminder.forEach{ reminder ->
+                id++
+                reminder.notificationId = id
+            }
+
+            scheduleNotifications(contentBinding.etTitle.text.toString())
+
             val lstMultimedia : MutableList<Multimedia> = mutableListOf()
             DataSourceImage.lstImage.forEach {
                 lstMultimedia.add(it)
@@ -277,6 +300,7 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
             DataSourceVoice.lstVoice.forEach {
                 lstMultimedia.add(it)
             }
+
              noteActivityViewModel.updateNote(
                  Note(
                      note!!.id,
@@ -305,4 +329,46 @@ class SaveOrDeleteFragment : Fragment(R.layout.fragment_save_or_delete) {
         }
     }
 
+    private fun scheduleNotifications(message: String){
+        val title = getString(R.string.title_notification)
+        DataSourceReminder.lstReminder.forEach{ reminder ->
+            val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
+            intent.putExtra("titleExtra", title)
+            intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                reminder.notificationId,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                reminder.time,
+                pendingIntent
+            )
+        }
+    }
+
+    private fun cancelAlarms(reminders: List<Reminder>, message: String){
+        val title = getString(R.string.title_notification)
+        reminders.forEach{ reminder ->
+            val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
+            intent.putExtra("titleExtra", title)
+            intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                reminder.notificationId,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager!!.cancel(pendingIntent)
+        }
+    }
 }

@@ -1,5 +1,10 @@
 package com.example.misnotas.fragments
 
+import android.app.AlarmManager
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,6 +26,8 @@ import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
 import com.example.misnotas.adapters.RvTasksAdapter
 import com.example.misnotas.databinding.FragmentNotaBinding
+import com.example.misnotas.model.Reminder
+import com.example.misnotas.notifications.NotificationReceiver
 import com.example.misnotas.utils.SwipeToDelete
 import com.example.misnotas.utils.hideKeyboard
 import com.example.misnotas.viewModel.MultimediaActivityViewModel
@@ -33,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+
 
 class TaskFragment : Fragment(R.layout.fragment_nota) {
 
@@ -143,6 +152,7 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
                 val multimedia=multimediaActivityViewModel.getAllMultimedia(note.id)
                 var actionBtnTapped=false
                 noteActivityViewModel.deleteNote(note)
+                cancelAlarms(reminders, note.title)
                 noteBinding.search.apply {
                     hideKeyboard()
                     clearFocus()
@@ -159,6 +169,7 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
 
                     override fun onShown(transientBottomBar: Snackbar?) {
                         transientBottomBar?.setAction("UNDO"){
+                            scheduleNotifications(reminders, note.title)
                             noteActivityViewModel.saveNote(note, reminders, multimedia)
                             actionBtnTapped=true
                             noteBinding.noData.isVisible=false
@@ -217,4 +228,46 @@ class TaskFragment : Fragment(R.layout.fragment_nota) {
 
     }
 
+    private fun scheduleNotifications(reminders: List<Reminder>, message: String){
+        val title = getString(R.string.title_notification)
+        reminders.forEach{ reminder ->
+            val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
+            intent.putExtra("titleExtra", title)
+            intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                reminder.notificationId,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                reminder.time,
+                pendingIntent
+            )
+        }
+    }
+
+    private fun cancelAlarms(reminders: List<Reminder>, message: String){
+        val title = getString(R.string.title_notification)
+        reminders.forEach{ reminder ->
+            val intent = Intent(activity?.applicationContext, NotificationReceiver::class.java)
+            intent.putExtra("titleExtra", title)
+            intent.putExtra("messageExtra", message)
+            intent.putExtra("notificationId", reminder.notificationId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                reminder.notificationId,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager!!.cancel(pendingIntent)
+        }
+    }
 }

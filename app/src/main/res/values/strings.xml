@@ -35,9 +35,10 @@
     <string name="pictures">PICTURES</string>
     <string name="add_image">add image</string>
     <string name="images">Images</string>
+    <string name="title_notification">Don\'t forget your task</string>
     <string name="videos">Videos</string>
-    <string name="add_video">add video</string>
+    <string name="add_video">Add video</string>
     <string name="play">Play</string>
     <string name="recordings">Recordings</string>
-    <string name="add_record">Add Record</string>
+    <string name="add_record">Add record</string>
 </resources>

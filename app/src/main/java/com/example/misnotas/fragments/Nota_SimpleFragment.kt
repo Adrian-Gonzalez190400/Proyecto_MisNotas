@@ -1,5 +1,9 @@
 package com.example.misnotas.fragments
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
@@ -216,5 +220,4 @@ class Nota_SimpleFragment : Fragment(R.layout.fragment_nota) {
         observerDataChanges()
 
     }
-
 }

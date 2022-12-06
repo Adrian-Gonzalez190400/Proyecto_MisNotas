@@ -78,7 +78,7 @@ class ReminderFragment : Fragment(R.layout.fragment_reminder)  {
             myCalendar.set(Calendar.MINUTE, minute)
             addReminder(
                 Reminder(
-                    0, 0, SimpleDateFormat.getInstance().format(myCalendar.time)
+                    0, 0, 0, SimpleDateFormat.getInstance().format(myCalendar.time), myCalendar.timeInMillis
                 )
             )
         }
