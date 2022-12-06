@@ -49,6 +49,8 @@ class NoteActivityViewModel(private val noteRepository: NoteRepository,
         return noteRepository.searchNote(query)
     }
 
+    fun getNote(id: Int): Note = noteRepository.getNote(id)
+
     fun getAllNotes(): LiveData<List<Note>> = noteRepository.getNote()
 
     fun getAllSimpleNotes(): LiveData<List<Note>> = noteRepository.getSimpleNote()

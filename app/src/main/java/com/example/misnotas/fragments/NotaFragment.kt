@@ -9,10 +9,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -137,22 +137,20 @@ class NotaFragment : Fragment(R.layout.fragment_nota) {
                 }
             }
         }
+
+        val notificationID = activity.intent.getIntExtra("notificationId", -1)
+        if(notificationID != -1) openNote(notificationID)
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        val notificationId = activity?.intent?.getIntExtra("notificationId", 0)!!
-//        Toast.makeText(this.context, "ID = " + notificationId.toString(), Toast.LENGTH_SHORT).show()
-//        if(notificationId!=0){
-//            val noteId = reminderActivityViewModel.getNoteId(notificationId)
-//            /*val action=NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment()
-//                        .setNote(note)
-//                    val extras= FragmentNavigatorExtras(parent to "recyclerView_${note.id}")
-//                    it.hideKeyboard()
-//                    Navigation.findNavController(it).navigate(action,extras)*/
-//        }
-//        activity?.intent?.putExtra("notificationId", 0)
-//    }
+    private fun openNote(notificationID: Int) {
+        val noteID = reminderActivityViewModel.getNoteId(notificationID)
+        val noteNotification = noteActivityViewModel.getNote(noteID)
+        Log.d("IDnotificacion", notificationID.toString())
+        Log.d("IDnota", noteID.toString())
+        val action=NotaFragmentDirections.actionNotaFragmentToSaveOrDeleteFragment().setNote(noteNotification)
+        Navigation.findNavController(noteBinding.rvNote).navigate(action)
+        activity?.intent?.putExtra("notificationId", -1)
+    }
 
     private fun swipteToDelete(rvNote: RecyclerView) {
         val swipeToDeleteCallback=object : SwipeToDelete(){

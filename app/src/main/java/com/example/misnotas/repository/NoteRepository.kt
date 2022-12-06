@@ -4,6 +4,7 @@ import com.example.misnotas.db.NoteDatabase
 import com.example.misnotas.model.Note
 
 class NoteRepository(private val db: NoteDatabase) {
+    fun getNote(id: Int)= db.getNoteDao().getNote(id)
     fun getNote()= db.getNoteDao().getAllNote()
     fun getSimpleNote()= db.getNoteDao().getAllSimpleNote()
     fun getTask()= db.getNoteDao().getAllTask()

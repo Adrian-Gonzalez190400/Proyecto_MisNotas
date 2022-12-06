@@ -20,5 +20,5 @@ interface ReminderDAO {
     fun getMaxNotificationId(): Int
 
     @Query("SELECT noteId FROM Reminder WHERE notificationId = :id")
-    fun getNoteId(id: Int): Int //todo mutablelist ?
+    fun getNoteId(id: Int): Int
 }
