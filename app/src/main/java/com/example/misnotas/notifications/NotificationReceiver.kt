@@ -7,10 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.example.misnotas.R
 import com.example.misnotas.activities.MainActivity
+
 
 const val channelID = "TASK-REMINDERS-CHANNEL"
 class NotificationReceiver : BroadcastReceiver (){
@@ -28,22 +27,13 @@ class NotificationReceiver : BroadcastReceiver (){
 
         val intentTap = Intent(context, MainActivity::class.java)
         intentTap.putExtra("notificationId", notificationID)
-        Log.d("IDnotificacion", notificationID.toString())
+        intentTap.flags = Intent.FLAG_ACTIVITY_MULTIPLE_TASK
 
-        intentTap.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-        var pendingIntent: PendingIntent
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(
-                context,
-                0, intentTap,
-                PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            pendingIntent = PendingIntent.getActivity(
-                context,
-                0, intentTap,
-                PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        var pendingIntent = PendingIntent.getActivity(
+            context,
+            notificationID!!, intentTap,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         val notification = NotificationCompat.Builder(context!!, channelID)
             .setSmallIcon(com.google.android.material.R.drawable.ic_clock_black_24dp)

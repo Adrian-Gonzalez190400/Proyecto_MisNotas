@@ -12,6 +12,9 @@ interface NoteDAO {
     @Update
     suspend fun updateNote(note: Note)
 
+    @Query("SELECT * FROM Note WHERE id = :id")
+    fun getNote(id: Int): Note
+
     @Query("SELECT * FROM Note ORDER BY creationDate DESC")
     fun getAllNote(): LiveData<List<Note>>
 
