@@ -67,8 +67,8 @@ class RvVoiceAdapter: ListAdapter<Multimedia, RvVoiceAdapter.VoiceViewHolder>(Di
                 record.setOnClickListener {
                     onPlay(mStartRecording)
                     record.text=when(mStartRecording){
-                        true -> "Stop"
-                        false -> "Play"
+                        true -> record.context.getString(R.string.stop)
+                        false -> record.context.getString(R.string.play)
                     }
                     mStartRecording=!mStartRecording
                 }

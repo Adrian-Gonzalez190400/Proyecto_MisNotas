@@ -99,24 +99,14 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
                         0, 0, 3, "$dirPath$filename.mp3", SimpleDateFormat.getInstance().format(myCalendar.time)
                     )
                 )
+
             }
-
         }
-
-
         recyclerViewDisplay()
 
         dataChanged()
 
-        /*voiceItemBinding.btnPlayRecordVoice.setOnClickListener {
-            onPlay(mStartRecording)
-            voiceItemBinding.btnPlayRecordVoice.text=when(mStartRecording){
-                true -> "Stop playing"
-                false -> "Start playing"
-            }
-            mStartRecording = !mStartRecording
-            dataChanged()
-        }*/
+
 
         voiceBinding.rvRecordings.setOnScrollChangeListener{_,scrollX,scrollY,_,oldScrollY ->
             when{
@@ -150,16 +140,10 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
     private fun stopRecorder(){
         recorder.release()
         isPaused=true
-        voiceBinding.fabTextVoiceRecord.text="Add Record"
+        isRecording=false
+        voiceBinding.fabTextVoiceRecord.text=getString(R.string.add_record)
     }
 
-  /*  @RequiresApi(Build.VERSION_CODES.N)
-    private fun resumeRecorder(){
-        recorder.release()
-        isPaused=false
-        voiceBinding.fabTextVoiceRecord.text="Stop Recording"
-
-    }*/
 
     private fun startRecording(){
         val activity = activity as MainActivity
@@ -182,7 +166,7 @@ class VoiceFragment: Fragment(R.layout.fragment_voice) {
             }catch (e: IOException){}
             start()
         }
-        voiceBinding.fabTextVoiceRecord.text="Stop Recording"
+        voiceBinding.fabTextVoiceRecord.text=getString(R.string.stop_recording)
         isRecording=true
         isPaused=false
     }

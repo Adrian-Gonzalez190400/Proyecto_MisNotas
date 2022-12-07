@@ -39,6 +39,8 @@
     <string name="videos">Videos</string>
     <string name="add_video">Add video</string>
     <string name="play">Play</string>
+    <string name="stop">Stop</string>
     <string name="recordings">Recordings</string>
-    <string name="add_record">Add record</string>
+    <string name="add_record">Add recording</string>
+    <string name="stop_recording">Stop recording</string>
 </resources>

@@ -39,6 +39,8 @@
     <string name="videos">Videos</string>
     <string name="add_video">Agregar video</string>
     <string name="play">Reproducir</string>
+    <string name="stop">Parar</string>
     <string name="recordings">Grabaciones</string>
-    <string name="add_record">Agregar grabación</string>
+    <string name="add_record">Agregar audio</string>
+    <string name="stop_recording">Parar audio</string>
 </resources>
